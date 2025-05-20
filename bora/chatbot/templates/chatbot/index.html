@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-purple: #4B3B76;
+            --accent-purple: #7851A9;
+            --light-purple: #E7DFFF;
+            --very-light-purple: #D0BFFF;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: var(--very-light-purple);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .main-wrapper {
+            display: flex;
+            height: 100vh;
+        }
+        /* Sidebar */
+        .sidebar {
+            width: 70px;
+            background: var(--deep-purple);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            gap: 25px;
+        }
+        .sidebar-icon {
+            color: white;
+            font-size: 28px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .sidebar-logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 30px;
+        }
+        /* User List */
+        .userlist {
+            width: 220px;
+            background: var(--light-purple);
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .userlist-header {
+            padding: 18px 20px 10px 20px;
+            font-weight: 500;
+            color: var(--deep-purple);
+            font-size: 18px;
+            border-bottom: 1px solid #e0d6f7;
+        }
+        .userlist-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .userlist-item.selected, .userlist-item:hover {
+            background: var(--very-light-purple);
+        }
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid var(--accent-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 12px;
+        }
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .user-name {
+            font-weight: 500;
+            color: var(--deep-purple);
+            font-size: 15px;
+        }
+        .user-desc {
+            font-size: 12px;
+            color: #6d5e8c;
+        }
+        /* Chat Area */
+        .chat-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--very-light-purple);
+        }
+        .chat-header {
+            display: flex;
+            align-items: center;
+            background: var(--light-purple);
+            padding: 18px 30px 18px 30px;
+            border-bottom: 1px solid #e0d6f7;
+        }
+        .chat-header-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid var(--accent-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-right: 15px;
+        }
+        .chat-header-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--deep-purple);
+        }
+        .chat-header-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 18px;
+        }
+        .chat-header-action {
+            color: var(--deep-purple);
+            font-size: 22px;
+            cursor: pointer;
+        }
+        /* Chat Messages */
+        .chat-messages {
+            flex: 1;
+            padding: 40px 0 0 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            overflow-y: auto;
+        }
+        .chat-bubble {
+            max-width: 420px;
+            padding: 18px 22px;
+            border-radius: 18px;
+            margin-bottom: 18px;
+            margin-left: 30px !important; 
+            font-size: 16px;
+            background: #fff;
+            color: var(--deep-purple);
+            box-shadow: 0 2px 8px rgba(120,81,169,0.07);
+            align-self: flex-start;
+            margin-left: 0;
+        }
+        .chat-bubble.user {
+            background: var(--accent-purple);
+            color: #fff;
+            align-self: flex-end;
+            margin-right: 30px !important; 
+            box-shadow: 0 2px 8px rgba(120,81,169,0.13);
+        }
+        .chat-bubble.bot {
+            background: #fff;
+            color: var(--deep-purple);
+            align-self: flex-start;
+        }
+        /* Input Bar */
+        .chat-input-bar {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            padding: 18px 30px;
+            border-radius: 18px 18px 18px 18px;
+            box-shadow: 0 -2px 8px rgba(120,81,169,0.07);
+            margin: 0 30px 30px 30px;
+        }
+        .chat-input {
+            flex: 1;
+            border: none;
+            font-size: 16px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            /* background: var(--very-light-purple); */
+            background: white;
+            margin-right: 12px;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        .chat-input:focus {
+            outline: 2px solid var(--accent-purple);
+        }
+        .send-btn {
+            background: var(--accent-purple);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .send-btn:hover {
+            background: var(--deep-purple);
+        }
+    </style>
+</head>
+<body>
+<div class="main-wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">B</div>
+        <div class="sidebar-icon">🏠</div>
+        <div class="sidebar-icon">👤</div>
+        <div class="sidebar-icon">💬</div>
+        <div class="sidebar-icon">⚙️</div>
+        <div class="sidebar-icon">➕</div>
+    </div>
+    <!-- User List -->
+    <div class="userlist">
+        <div class="userlist-header">SKN 10기 <span style="font-size:14px;">&#x25BC;</span></div>
+        <div class="userlist-item selected" data-mentor="1" onclick="selectMentor(1)">
+            <div class="user-avatar">👤</div>
+            <div class="user-info">
+                <span class="user-name">선배 1</span>
+                <span class="user-desc">네, 비자 프로세스는 다음과 같습니다.</span>
+            </div>
+        </div>
+        <div class="userlist-item" data-mentor="2" onclick="selectMentor(2)">
+            <div class="user-avatar">👤</div>
+            <div class="user-info">
+                <span class="user-name">선배 2</span>
+                <span class="user-desc">네, 비자 프로세스는 다음과 같습니다.</span>
+            </div>
+        </div>
+        <div class="userlist-item" data-mentor="3" onclick="selectMentor(3)">
+            <div class="user-avatar">👤</div>
+            <div class="user-info">
+                <span class="user-name">선배 3</span>
+                <span class="user-desc">네, 비자 프로세스는 다음과 같습니다.</span>
+            </div>
+        </div>
+        <div class="userlist-item" data-mentor="4" onclick="selectMentor(4)">
+            <div class="user-avatar">👤</div>
+            <div class="user-info">
+                <span class="user-name">선배 4</span>
+                <span class="user-desc">네, 비자 프로세스는 다음과 같습니다.</span>
+            </div>
+        </div>
+    </div>
+    <!-- Chat Section -->
+    <div class="chat-section">
+        <div class="chat-header">
+            <div class="chat-header-avatar">👤</div>
+            <div class="chat-header-title" id="chat-header-title">선배 1</div>
+            <div class="chat-header-actions">
+                <span class="chat-header-action">📞</span>
+                <span class="chat-header-action">💬</span>
+                <span class="chat-header-action">ℹ️</span>
+            </div>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <!-- Chat bubbles will be rendered here by JS -->
+        </div>
+        <form class="chat-input-bar" onsubmit="sendMessage(); return false;">
+            <input type="text" id="user-input" class="chat-input" placeholder="메세지 입력...">
+            <button type="submit" class="send-btn">&#9658;</button>
+        </form>
+    </div>
+</div>
+<script>
+    // Store chat history for each mentor
+    const mentors = {
+        1: {
+            name: '선배 1',
+            chat: [
+                {from: 'user', text: 'F-1 비자 프로세스에 대해 알려줘.'},
+                {from: 'bot', html: '네. 비자 프로세스는 다음과 같습니다.<br><ol style="margin: 8px 0 0 18px; color: #4B3B76;"><li>어쩌구</li><li>어쩌구</li><li>어쩌구</li><li>어쩌구</li></ol><div style="margin-top: 8px;">이상입니다.</div>'}
+            ]
+        },
+        2: {name: '선배 2', chat: []},
+        3: {name: '선배 3', chat: []},
+        4: {name: '선배 4', chat: []}
+    };
+    let currentMentor = 1;
+
+    function renderChat() {
+        const chatMessages = document.getElementById('chat-messages');
+        chatMessages.innerHTML = '';
+        mentors[currentMentor].chat.forEach(msg => {
+            const div = document.createElement('div');
+            div.className = 'chat-bubble ' + (msg.from === 'user' ? 'user' : 'bot');
+            if (msg.html) {
+                div.innerHTML = msg.html;
+            } else {
+                div.textContent = msg.text;
+            }
+            chatMessages.appendChild(div);
+        });
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function selectMentor(mentorId) {
+        currentMentor = mentorId;
+        // Update selected UI
+        document.querySelectorAll('.userlist-item').forEach(item => {
+            item.classList.remove('selected');
+        });
+        document.querySelector('.userlist-item[data-mentor="' + mentorId + '"]').classList.add('selected');
+        // Update header
+        document.getElementById('chat-header-title').textContent = mentors[mentorId].name;
+        // Render chat
+        renderChat();
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('user-input');
+        const message = input.value.trim();
+        if (message) {
+            mentors[currentMentor].chat.push({from: 'user', text: message});
+            renderChat();
+            input.value = '';
+            setTimeout(() => {
+                mentors[currentMentor].chat.push({from: 'bot', text: 'I received your message: ' + message});
+                renderChat();
+            }, 1000);
+        }
+    }
+    document.getElementById('user-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+    // Initial render
+    renderChat();
+</script>
+</body>
+</html> 
