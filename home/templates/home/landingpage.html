@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <link rel="stylesheet" href="{% static 'home/landingpage.css' %}">
+</head>
+<body>
+    <div class="landing-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo">goodfellow.ai</div>
+            <button class="sidebar-btn create">+ Create</button>
+            <button class="sidebar-btn discover">Discover</button>
+            <input class="sidebar-search" type="text" placeholder="Search">
+            <div class="sidebar-today">Today</div>
+            <div class="sidebar-user-list">
+                <div class="sidebar-user"><img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Sam"> Sam Rothstein</div>
+                <div class="sidebar-user"><img src="{% static 'home/gamst.png' %}" alt="Gamst"> 감스트</div>
+            </div>
+            <div class="sidebar-bottom">
+                <div class="sidebar-links">
+                    <a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a>
+                </div>
+                <button class="sidebar-btn upgrade">Upgrade to c.ai+</button>
+                <div class="sidebar-profile">
+                    <span class="sidebar-profile-icon">G</span> GloriousMynah3253
+                </div>
+            </div>
+        </aside>
+        <main class="main-content">
+            <div class="main-header">
+                <span>환영합니다, </span>
+                <span class="main-username">SKT 10기</span>
+                <input class="main-search" type="text" placeholder="Search">
+            </div>
+            <section class="section">
+                <h2>For you</h2>
+                <div class="card-row">
+                    {% for influencer in influencers %}
+                    <a href="{% url 'influencer_chat' influencer.pk %}" class="card-link">
+                        <div class="card influencer-card-horizontal">
+                            <img src="{% if influencer.image %}{{ influencer.image.url }}{% else %}{% static 'home/gamst.png' %}{% endif %}" class="card-img influencer-img-left" alt="{{ influencer.name }}">
+                            <div class="influencer-card-content">
+                                <div class="card-title">{{ influencer.name }}</div>
+                                <br>
+                                <div class="card-author">{{ influencer.description }}</div>
+                                <br>
+                                <div class="card-desc">채팅 가격: {{ influencer.price_per_chat }}원</div>
+                                <div class="card-stats">💬 {{ influencer.total_chat_received }} 👍 {{ influencer.thumbs_up }}</div>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </section>
+            <section class="section">
+                <h2>Featured</h2>
+                <div class="card-row">
+                    <!-- defein cards -->
+                    
+                </div>
+            </section>
+            <section class="section">
+                <h2>Popular</h2>
+                <div class="card-row">
+                    <!-- defein cards -->
+                   
+                </div>
+            </section>
+            <section class="section">
+                <h2>Try these</h2>
+                <div class="card-row">
+                                   <!-- defein cards -->
+
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
