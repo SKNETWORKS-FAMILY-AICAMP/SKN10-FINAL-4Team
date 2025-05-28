@@ -7,4 +7,8 @@ def homepage(request):
 
 def landingpage(request):
     influencers = Influencer.objects.all()
-    return render(request, 'home/landingpage.html', {'influencers': influencers})
+    user = request.user
+    return render(request, 'home/landingpage.html', {
+        'influencers': influencers,
+        'user': user,
+    })

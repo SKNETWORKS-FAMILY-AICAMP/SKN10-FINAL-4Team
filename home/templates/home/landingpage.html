@@ -11,8 +11,8 @@
     <div class="landing-container">
         <aside class="sidebar">
             <div class="sidebar-logo">goodfellow.ai</div>
-            <button class="sidebar-btn create">+ Create</button>
-            <button class="sidebar-btn discover">Discover</button>
+            <!-- <button class="sidebar-btn create">+ Create</button>
+            <button class="sidebar-btn discover">Discover</button> -->
             <input class="sidebar-search" type="text" placeholder="Search">
             <div class="sidebar-today">Today</div>
             <div class="sidebar-user-list">
@@ -20,19 +20,17 @@
                 <div class="sidebar-user"><img src="{% static 'home/gamst.png' %}" alt="Gamst"> 감스트</div>
             </div>
             <div class="sidebar-bottom">
-                <div class="sidebar-links">
-                    <a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a>
-                </div>
-                <button class="sidebar-btn upgrade">Upgrade to c.ai+</button>
+               
+                <button class="sidebar-btn upgrade" onclick="location.href='/accounts/logout'">로그아웃</button>
                 <div class="sidebar-profile">
-                    <span class="sidebar-profile-icon">G</span> GloriousMynah3253
+                    <span class="sidebar-profile-icon">G</span> {{ user.name|default:user.username|default:"Guest" }}
                 </div>
             </div>
         </aside>
         <main class="main-content">
             <div class="main-header">
                 <span>환영합니다, </span>
-                <span class="main-username">SKT 10기</span>
+                <span class="main-username">{{ user.name|default:user.username|default:"Guest" }}</span>
                 <input class="main-search" type="text" placeholder="Search">
             </div>
             <section class="section">
