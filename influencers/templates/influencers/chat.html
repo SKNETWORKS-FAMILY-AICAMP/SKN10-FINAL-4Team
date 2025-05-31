@@ -11,18 +11,22 @@
     document.addEventListener('DOMContentLoaded', function() {
         const chatForm = document.getElementById('chat-form');
         const chatLog = document.getElementById('chat-log');
+        const influencerName = "{{ influencer.name|escapejs }}"; // Get from Django context
+    
         if (chatForm) {
             chatForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 const input = document.getElementById('chat-input');
                 const message = input.value;
                 if (!message.trim()) return;
+    
                 // Append user message
                 chatLog.innerHTML += `
                     <div class="chat-bubble user-bubble">
                         <strong>나:</strong> ${message}
                     </div>
                 `;
+    
                 fetch("{% url 'send_message' influencer.id %}", {
                     method: "POST",
                     headers: {
@@ -33,10 +37,10 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    // Append OpenAI answer
+                    // Append influencer answer
                     chatLog.innerHTML += `
                         <div class="chat-bubble ai-bubble">
-                            <strong>{{ influencer.name }}:</strong> ${data.answer}
+                            <strong>${influencerName}:</strong> ${data.answer}
                         </div>
                     `;
                     // Play audio if available
@@ -50,7 +54,7 @@
             });
         }
     });
-    </script>
+</script>
 <body>
     <a href="{% url 'landingpage' %}" class="back-btn">뒤로가기</a>
     <div class="chat-container">
@@ -60,29 +64,18 @@
             <div class="profile-desc">{{ influencer.description }}</div>
             <div class="profile-author">By {{ influencer.name }}</div>
         </div>
-        <div class="chat-bubble">
-            <div class="chat-meta">
-                <img src="{% if influencer.image %}{{ influencer.image.url }}{% else %}{% static 'home/gamst.png' %}{% endif %}" style="width: 28px; height: 28px; border-radius: 50%; margin-right: 8px;">
-                <span class="profile-name" style="font-size:1rem; font-weight:600; margin:0;">{{ influencer.name }}</span>
-                <span style="font-size:0.95rem; color:#b0b0b0;">c.ai</span>
-                <span style="font-size:1.1rem; color:#3fa7ff;">&#9654;</span>
-            </div>
-            <div>
-                <em>its morning, you are on your way to school. When you arrive to the gates you see Momoka who looks at you with a cold strict look. She walks to you while swaying her hips to tease you.<br>
-                You are almost late, again. Care to explain ? she cross her arms to show off her "pride" to tease you even more.</em>
-            </div>
-        </div>
         <div class="chat-footer">
             This is A.I. and not a real person. Treat everything it says as fiction
         </div>
-    </div>
-    <div id="chat-log" class="chat-log"></div>
+        <div id="chat-log" class="chat-log"></div>
     <form class="chat-input-section" id="chat-form">
         <div class="chat-input-box">
             <input class="chat-input" id="chat-input" type="text" placeholder="Message {{ influencer.name }}..." autocomplete="off">
             <button class="chat-send-btn" type="submit">&#9658;</button>
         </div>
     </form>
-    <div id="chat-result" style="color: #fff; text-align: center; margin-top: 20px;"></div>
+    <!-- <div id="chat-result" style="color: #fff; text-align: center; margin-top: 20px;"></div> -->
+    </div>
+    
 </body>
 </html>

@@ -15,17 +15,14 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv()
 
+#구글 로그인 설정
+load_dotenv()
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-z#0n5lyt^32%)3m2@tj970#!5t3(2a^dsfj2upfl)obtqy*4fp'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
@@ -56,7 +53,6 @@ INSTALLED_APPS = [
 LOGIN_REDIRECT_URL = '/landingpage'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/homepage'
 ACCOUNT_LOGOUT_ON_GET = True
-
 ACCOUNT_EMAIL_REQUIRED = True            # email 필드 사용 o
 ACCOUNT_USERNAME_REQUIRED = True         # username 필드 사용 o
 ACCOUNT_AUTHENTICATION_METHOD = "email"
