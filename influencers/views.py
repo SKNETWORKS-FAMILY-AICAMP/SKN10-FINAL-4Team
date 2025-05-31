@@ -62,7 +62,6 @@ def send_message(request, id):
 
 def send_message_to_gpt(message, model_id, system_prompt):
     print(f"[BACKEND] Getting answer from GPT using OpenAI")
-    client = openai.OpenAI(api_key=OPENAI_API_KEY)
     response = client.chat.completions.create(
         model=model_id,
         messages=[
