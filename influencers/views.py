@@ -38,7 +38,10 @@ def send_message(request, id):
             #인플루언서 모델 가져오기
             influencer = get_object_or_404(Influencer, pk=id)
             #json으로 받은 메시지를 openai에 전달
-            answer = send_message_to_gpt(message, influencer.model_id, influencer.system_prompt)
+            response = send_message_to_gpt(message, influencer.response_model_id, influencer.response_system_prompt)
+            print(f"Answer: {response}")
+
+            answer = send_message_to_gpt(response, influencer.speech_style_model_id, influencer.speech_style_system_prompt)
             print(f"Answer: {answer}")
 
             audio_url = generate_tts_audio(influencer, answer)

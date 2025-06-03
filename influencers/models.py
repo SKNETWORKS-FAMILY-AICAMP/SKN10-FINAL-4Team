@@ -11,8 +11,10 @@ class Influencer(models.Model):
     price_per_chat = models.IntegerField(default=0)
     image = models.ImageField(upload_to='influencers/', null=True, blank=True)
     voiceid = models.CharField(max_length=100, null=True, blank=True, help_text="ElevenLabs Voice ID")
-    model_id = models.CharField(max_length=100, null=True, blank=True, help_text="OpenAI Model ID")
-    system_prompt = models.TextField(null=True, blank=True, help_text="System Prompt")
+    response_model_id = models.CharField(max_length=100, null=True, blank=True, help_text="OpenAI Model ID")
+    response_system_prompt = models.TextField(null=True, blank=True, help_text="System Prompt")
+    speech_style_model_id = models.CharField(max_length=100, null=True, blank=True, help_text="OpenAI Model ID")
+    speech_style_system_prompt = models.TextField(null=True, blank=True, help_text="System Prompt")
 
     def __str__(self):
         return self.name
