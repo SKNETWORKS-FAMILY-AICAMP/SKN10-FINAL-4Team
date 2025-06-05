@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-z#0n5lyt^32%)3m2@tj970#!5t3(2a^dsfj2upfl)obtqy*4fp
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["http://django-env.eba-dpgbgjxa.ap-northeast-2.elasticbeanstalk.com/", "localhost", "127.0.0.1", '*']
 SITE_ID = 1
 
 
@@ -49,14 +49,12 @@ INSTALLED_APPS = [
     'users',
     'influencers',
 ]
-
+SOCIALACCOUNT_LOGIN_ON_GET = True
 LOGIN_REDIRECT_URL = '/landingpage'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/homepage'
 ACCOUNT_LOGOUT_ON_GET = True
-ACCOUNT_EMAIL_REQUIRED = True            # email 필드 사용 o
-ACCOUNT_USERNAME_REQUIRED = True         # username 필드 사용 o
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_LOGIN_METHODS = {'email'}
 MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -73,7 +71,7 @@ ROOT_URLCONF = 'goodfellow.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates'),],
+        'DIRS': [BASE_DIR / 'goodfellow' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -129,10 +127,25 @@ AUTH_USER_MODEL = 'users.User'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': "goodfellow",
+            'USER': 'ebdb',
+            'PASSWORD': 'ebdb1234',
+            'HOST': 'awseb-e-amvk3xkzuw-stack-awsebrdsdatabase-ggdkqj8abbrj.cn04euscio0e.ap-northeast-2.rds.amazonaws.com',
+            'PORT': '5432',
     }
 }
+
+STATIC_ROOT = 'static'
+STATIC_URL = '/static/'
+# STATICFILES_DIRS = [
+#     BASE_DIR / "static",  # if you have a project-level static folder
+# ]
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'influencers/static'),
+    os.path.join(BASE_DIR, 'home/static'),
+]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -173,11 +186,16 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
-
+STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
 # STATICFILES_DIRS = [
 #     BASE_DIR / "static",  # if you have a project-level static folder
 # ]
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'influencers/static'),
+    os.path.join(BASE_DIR, 'home/static'),
+]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
