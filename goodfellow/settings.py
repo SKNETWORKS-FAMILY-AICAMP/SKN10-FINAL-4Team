@@ -137,24 +137,6 @@ DATABASES = {
 }
 
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': "goodfellow",
-            'USER': 'ebdb',
-            'PASSWORD': 'ebdb1234',
-            'HOST': 'awseb-e-amvk3xkzuw-stack-awsebrdsdatabase-ggdkqj8abbrj.cn04euscio0e.ap-northeast-2.rds.amazonaws.com',
-            'PORT': '5432',
-        }
-    }   
 
 STATIC_ROOT = 'static'
 STATIC_URL = 'static/'
