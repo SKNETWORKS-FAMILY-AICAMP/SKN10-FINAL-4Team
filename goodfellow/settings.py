@@ -129,17 +129,23 @@ AUTH_USER_MODEL = 'users.User'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'NAME': RDS_DB_NAME,
+#             'USER': RDS_USERNAME,
+#             'PASSWORD': RDS_PASSWORD,
+#             'HOST': RDS_HOSTNAME,
+#             'PORT': RDS_PORT,
+#     }
+# }
+
 DATABASES = {
     'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': RDS_DB_NAME,
-            'USER': RDS_USERNAME,
-            'PASSWORD': RDS_PASSWORD,
-            'HOST': RDS_HOSTNAME,
-            'PORT': RDS_PORT,
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 
 STATIC_ROOT = 'static'
