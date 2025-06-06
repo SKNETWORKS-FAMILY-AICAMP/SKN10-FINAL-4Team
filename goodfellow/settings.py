@@ -20,7 +20,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-
+RDS_HOSTNAME = os.getenv("RDS_HOSTNAME")
+RDS_DB_NAME = os.getenv("RDS_DB_NAME")
+RDS_USERNAME = os.getenv("RDS_USERNAME")
+RDS_PASSWORD = os.getenv("RDS_PASSWORD")
+RDS_PORT = os.getenv("RDS_PORT")
 SECRET_KEY = 'django-insecure-z#0n5lyt^32%)3m2@tj970#!5t3(2a^dsfj2upfl)obtqy*4fp'
 
 DEBUG = True
@@ -128,11 +132,11 @@ AUTH_USER_MODEL = 'users.User'
 DATABASES = {
     'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': "goodfellow",
-            'USER': 'ebdb',
-            'PASSWORD': 'ebdb1234',
-            'HOST': 'awseb-e-amvk3xkzuw-stack-awsebrdsdatabase-ggdkqj8abbrj.cn04euscio0e.ap-northeast-2.rds.amazonaws.com',
-            'PORT': '5432',
+            'NAME': RDS_DB_NAME,
+            'USER': RDS_USERNAME,
+            'PASSWORD': RDS_PASSWORD,
+            'HOST': RDS_HOSTNAME,
+            'PORT': RDS_PORT,
     }
 }
 
