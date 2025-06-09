@@ -1,42 +1,73 @@
-# AI Influencer Platform
+<div align="center">
+   
+# LUMINA.
+**AI 인플루언서 챗봇 플랫폼**
 
-## Project Overview
-A Django-based platform for interacting with AI-powered influencer chatbots. Users can chat with influencers, hear AI-generated voices, and experience dynamic content.
+</div>
+
+<div align="center">
+<img width="300" height="300" src="https://github.com/user-attachments/assets/0946d148-5fde-4665-874f-30168be06e75"/>
+<img width="350" height="350" src="https://github.com/user-attachments/assets/e536447a-a6b9-452f-b110-02281e833eee"/>
+<img width="330" height="330" src="https://github.com/user-attachments/assets/31d15df3-f0ea-4725-98d2-5bdb89047a13"/>
+</div>
+
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+![Screenshot 2025-06-09 at 4 39 17 PM](https://github.com/user-attachments/assets/d379d8bc-794b-4f0f-b074-534b1f595997)
+
+<br/>
+<br/>
+
+## About LUMINA.
+루미나(Lumina)는 인플루언서와의 개인화된 소통 경험을 제공하는 감성 AI 플랫폼입니다.
+실제 인플루언서의 말투, 억양, 보이스 스타일을 정밀하게 클로닝하여, 사용자가 마치 진짜 인플루언서와 직접 대화하는 듯한 몰입감과 정서적 연결감을 제공합니다. 루미나는 단순한 챗봇을 넘어, 팬과 인플루언서 사이의 심리적 거리감을 줄이고, 새로운 형태의 소통 문화를 제시합니다.
 
 ## Features
-- User authentication (Google login via allauth)
-- Dynamic influencer cards with images and voice
-- Text-to-speech using ElevenLabs
-- Audio and chat logging
-- Modular Django app structure
+
+###  말투 및 어투 완벽 재현  
+인플루언서 특유의 말버릇, 억양, 화법을 정밀하게 복원하여  
+실제와 유사한 자연스러운 대화 경험을 제공합니다.
+
+###  실제 음성과 톤 클로닝  
+감정, 발음, 억양까지 반영된 고품질 음성 합성을 통해  
+마치 실제 인플루언서와 통화하는 듯한 몰입감을 제공합니다.
+
+###  성격과 반응 패턴 반영  
+인플루언서의 성격, 유머 코드, 감정 반응을 학습하여  
+상황에 맞는 개성 있는 맞춤형 응답을 생성합니다.
 
 ## Setup
-1. Clone the repository:
+1. 리포지토리 클론:
    ```sh
-   git clone <your-repo-url>
-   cd <project-directory>
+   git clone https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN10-FINAL-4Team.git
+   cd goodfellow
    ```
-2. Create and activate a virtual environment:
+2. 가상환경 생성 및 활성화:
    ```sh
    python -m venv venv
    source venv/bin/activate
    ```
-3. Install dependencies:
+3. 필수 라이브러리 설치:
    ```sh
    pip install -r requirements.txt
    ```
-4. Set up your `.env` file with the required secrets (see below).
-5. Run migrations:
+4. 환경변수 `.env` 생성.
+5. 마이크레이션:
    ```sh
    python manage.py migrate
    ```
-6. Start the development server:
+6. 로컬 서버 실행:
    ```sh
    python manage.py runserver
    ```
 
-## Environment Variables
-Create a `.env` file in the project root with the following keys:
+## 환경변수
+프로젝트 루트 디렉토리에 `.env` 파일 생성:
 ```
 OPENAI_API_KEY=your_openai_key
 ELEVENLABS_API_KEY=your_elevenlabs_key
@@ -44,9 +75,9 @@ GOOGLE_OAUTH_CLIENT_ID=your_google_client_id
 GOOGLE_OAUTH_CLIENT_SECRET=your_google_client_secret
 ```
 
-## Running the Project
-- Visit `http://localhost:8000` in your browser.
-- Log in with Google and interact with AI influencers.
+## 프로젝트 실행
+- 브라우저에서 `http://localhost:8000` 방문.
+- 구글 로그인 후 인플루언서들과 대화.
 
 ## License
 MIT License
