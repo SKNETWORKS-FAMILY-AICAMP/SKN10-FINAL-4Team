@@ -12,6 +12,7 @@ import uuid
 from elevenlabs import VoiceSettings
 from elevenlabs.client import ElevenLabs
 from influencers.models import Influencer
+from django.views.decorators.csrf import csrf_exempt
 
 load_dotenv()  # take environment variables from .env.
 
@@ -29,6 +30,7 @@ def influencer_chat(request, pk):
     return render(request, 'influencers/chat.html', {'influencer': influencer})
 
 #유저 잇풋 openai에 전달
+@csrf_exempt
 def send_message(request, id):
     if request.method == 'POST':
         message = request.POST.get('message')

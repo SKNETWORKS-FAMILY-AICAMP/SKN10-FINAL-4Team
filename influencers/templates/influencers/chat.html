@@ -22,8 +22,9 @@
     
                 // Append user message
                 chatLog.innerHTML += `
-                    <div class="chat-bubble user-bubble">
-                        <strong>나:</strong> ${message}
+                    <div class="bubble-row bubble-row-user">
+                        <div class="bubble-meta bubble-meta-user">나</div>
+                        <div class="bubble bubble-user">${message}</div>
                     </div>
                 `;
     
@@ -39,8 +40,9 @@
                 .then(data => {
                     // Append influencer answer
                     chatLog.innerHTML += `
-                        <div class="chat-bubble ai-bubble">
-                            <strong>${influencerName}:</strong> ${data.answer}
+                        <div class="bubble-row bubble-row-ai">
+                            <div class="bubble-meta bubble-meta-ai">${influencerName}</div>
+                            <div class="bubble bubble-ai">${data.answer}</div>
                         </div>
                     `;
                     // Play audio if available
@@ -51,6 +53,8 @@
                     input.value = '';
                     chatLog.scrollTop = chatLog.scrollHeight;
                 });
+                input.value = '';
+                chatLog.scrollTop = chatLog.scrollHeight;
             });
         }
     });
@@ -58,24 +62,26 @@
 <body>
     <a href="{% url 'landingpage' %}" class="back-btn">뒤로가기</a>
     <div class="chat-container">
-        <div class="profile-section">
-            <img src="{% if influencer.image %}{{ influencer.image.url }}{% else %}{% static 'home/gamst.png' %}{% endif %}" class="profile-img" alt="{{ influencer.name }}">
-            <div class="profile-name">{{ influencer.name }}</div>
-            <div class="profile-desc">{{ influencer.description }}</div>
-            <div class="profile-author">By {{ influencer.name }}</div>
+        <div class="chat-wrapper">
+            <div class="profile-section">
+                <img src="{% if influencer.image %}{{ influencer.image.url }}{% else %}{% static 'home/gamst.png' %}{% endif %}" class="profile-img" alt="{{ influencer.name }}">
+                <div class="profile-name">{{ influencer.name }}</div>
+                <div class="profile-desc">{{ influencer.description }}</div>
+                <div class="profile-author">By {{ influencer.name }}</div>
+            </div>
+            <div class="chat-footer">
+                This is A.I. and not a real person. Treat everything it says as fiction
+            </div>
+            <div class="chat-area">
+                <div id="chat-log" class="chat-log"></div>
+            </div>
+            <form class="chat-input-section" id="chat-form">
+                <div class="chat-input-box">
+                    <input class="chat-input" id="chat-input" type="text" placeholder="Message {{ influencer.name }}..." autocomplete="off">
+                    <button class="chat-send-btn" type="submit">&#9658;</button>
+                </div>
+            </form>
         </div>
-        <div class="chat-footer">
-            This is A.I. and not a real person. Treat everything it says as fiction
-        </div>
-        <div id="chat-log" class="chat-log"></div>
-    <form class="chat-input-section" id="chat-form">
-        <div class="chat-input-box">
-            <input class="chat-input" id="chat-input" type="text" placeholder="Message {{ influencer.name }}..." autocomplete="off">
-            <button class="chat-send-btn" type="submit">&#9658;</button>
-        </div>
-    </form>
-    <!-- <div id="chat-result" style="color: #fff; text-align: center; margin-top: 20px;"></div> -->
     </div>
-    
 </body>
 </html>
