@@ -6,9 +6,10 @@
 </div>
 
 <div align="center">
-<img width="300" height="300" src="https://github.com/user-attachments/assets/0946d148-5fde-4665-874f-30168be06e75"/>
+<img width="700" height="300" src="https://github.com/user-attachments/assets/6e4ead57-5ec5-49c7-8d72-d9c7b0762392"/>
 <!-- <img width="350" height="350" src="https://github.com/user-attachments/assets/e536447a-a6b9-452f-b110-02281e833eee"/> -->
-<img width="330" height="330" src="https://github.com/user-attachments/assets/31d15df3-f0ea-4725-98d2-5bdb89047a13"/>
+<!-- <img width="330" height="330" src="https://github.com/user-attachments/assets/31d15df3-f0ea-4725-98d2-5bdb89047a13"/>
+ -->
 </div>
 
 <div align="center">
@@ -45,53 +46,38 @@
 인플루언서의 성격, 유머 코드, 감정 반응을 학습하여  
 상황에 맞는 개성 있는 맞춤형 응답을 생성합니다.
 
-
-
-
-
-
-<img src="https://media2.giphy.com/media/QssGEmpkyEOhBCb7e1/giphy.gif?cid=ecf05e47a0n3gi1bfqntqmob8g9aid1oyj2wr3ds3mg700bl&rid=giphy.gif" width ="30">&nbsp; ***Skills***
+## Skills
 
 ###### Languages & Syntax:
-![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)&nbsp;
-![C++](https://img.shields.io/badge/c++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white)&nbsp;
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)&nbsp;
 
-<img align="right" width=310px alt="Unicorn" src="https://media1.tenor.com/m/XwmLgqDr19YAAAAC/colin-ritman-bandersnatch.gif"/>
+[![My Skills](https://skillicons.dev/icons?i=python,linux)](https://skillicons.dev)
+
 
 ###### Frontend Development:
-![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)&nbsp;
-![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)&nbsp;
-![Angular](https://img.shields.io/badge/angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white)&nbsp;
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)&nbsp;
+[![My Skills](https://skillicons.dev/icons?i=html,css,js,figma)](https://skillicons.dev)
 
 ###### Backend & Frameworks:
-![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)&nbsp;
-![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)&nbsp;
-![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)&nbsp;
-![.Net](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+[![My Skills](https://skillicons.dev/icons?i=django,ubuntu)](https://skillicons.dev)
 
 ###### Deployment & Cloud Services:
-![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)&nbsp;
-![Render](https://img.shields.io/badge/Render-%46E3B7.svg?style=for-the-badge&logo=render&logoColor=white)&nbsp;
+[![My Skills](https://skillicons.dev/icons?i=aws)](https://skillicons.dev)
 
-<!-- #### ML/DL -->
+###### Aritificial Intelligence & Data
+[![My Skills](https://skillicons.dev/icons?i=pytorch,sklearn)](https://skillicons.dev)
+
+
+
 
 ###### Database Management:
-![MicrosoftSQLServer](https://img.shields.io/badge/Microsoft%20SQL%20Server-CC2927?style=for-the-badge&logo=microsoft%20sql%20server&logoColor=white)&nbsp;
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)&nbsp;
-![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)&nbsp;
+[![My Skills](https://skillicons.dev/icons?i=aws,postgres)](https://skillicons.dev)
+
 
 ###### Development Tools:
-![Git](https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white)&nbsp;
-![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)&nbsp;
-![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)&nbsp;
-![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)&nbsp;
+[![My Skills](https://skillicons.dev/icons?i=git,github,postman,discord)](https://skillicons.dev)
 
 ###### Development Environments:
-![IntelliJ IDEA](https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)&nbsp;
-![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)&nbsp;
-![Visual Studio](https://img.shields.io/badge/Visual%20Studio-5C2D91.svg?style=for-the-badge&logo=visual-studio&logoColor=white)&nbsp;
+[![My Skills](https://skillicons.dev/icons?i=vscode)](https://skillicons.dev)
+
 <br>
 <br>
 
