@@ -52,37 +52,69 @@
 인플루언서의 성격, 유머 코드, 감정 반응을 학습하여  
 상황에 맞는 개성 있는 맞춤형 응답을 생성합니다.
 
+## 서비스 구조
+![Screenshot 2025-06-11 at 3 39 54 PM](https://github.com/user-attachments/assets/a8a45ca1-0dfb-4088-92c6-65f782712670)
+
+
+
+## 텍스트 모델 발전 과정
+![Screenshot 2025-06-11 at 4 18 38 PM](https://github.com/user-attachments/assets/17d017de-1c85-469c-911e-1bc5b0c4807a)
+
+![Screenshot 2025-06-11 at 4 19 30 PM](https://github.com/user-attachments/assets/01474372-cb88-47ed-8132-0065a9f9fcca)
+
+## 보이스 모델 발전 과정
+
+### 코사인 유사도 (벡터)
+![image](https://github.com/user-attachments/assets/fe28b9ac-a14a-49ed-a10a-fbdea709d3f1)
+
+### PCA / t-SNE (차원 축소)
+![image](https://github.com/user-attachments/assets/874a0750-3eba-4184-b9a2-121d43c82798)
+
+### 3D 시각화
+![image](https://github.com/user-attachments/assets/d5fcfbdf-6275-47c9-aa66-0049ae7d633d)
+
+### MFCC (FFT 음성 특징 유사도)
+![image](https://github.com/user-attachments/assets/39afb28a-dc05-4955-b565-1cb15207f747)
+
+
+
+## 배포
+![Screenshot 2025-06-11 at 4 08 38 PM](https://github.com/user-attachments/assets/4b4a6f6d-45ac-4e4f-ad5f-b5dfcd8db6a8)
+
 ## Skills
 
-###### Languages & Syntax:
+#### Languages & Syntax:
 
 [![My Skills](https://skillicons.dev/icons?i=python,linux)](https://skillicons.dev)
 
 
-###### Frontend Development:
+#### Frontend Development:
 [![My Skills](https://skillicons.dev/icons?i=html,css,js,figma)](https://skillicons.dev)
 
-###### Backend & Frameworks:
+#### Backend & Frameworks:
 [![My Skills](https://skillicons.dev/icons?i=django,ubuntu)](https://skillicons.dev)
 
-###### Deployment & Cloud Services:
+#### Deployment & Cloud Services:
 [![My Skills](https://skillicons.dev/icons?i=aws)](https://skillicons.dev)
 
-###### Aritificial Intelligence & Data
+#### Aritificial Intelligence & Data
 [![My Skills](https://skillicons.dev/icons?i=pytorch,sklearn)](https://skillicons.dev)
+<img src="https://github.com/user-attachments/assets/33f61e6b-e7f2-4629-924a-d9e0c83654d3" width="50" />
+<img src="https://github.com/user-attachments/assets/6e036d43-461d-4642-b5b5-4771143bd2ec" width="50" />
+<img src="https://github.com/user-attachments/assets/831b1873-9d40-401f-8202-9fe4e814a17a" width="50" />
 
 
-
-
-###### Database Management:
+#### Database Management:
 [![My Skills](https://skillicons.dev/icons?i=aws,postgres)](https://skillicons.dev)
 
 
-###### Development Tools:
+#### Development Tools:
 [![My Skills](https://skillicons.dev/icons?i=git,github,postman,discord)](https://skillicons.dev)
 
-###### Development Environments:
+#### Development Environments:
 [![My Skills](https://skillicons.dev/icons?i=vscode)](https://skillicons.dev)
+<img src="https://github.com/user-attachments/assets/8d4d3434-7c57-4633-a3be-cb638abb4565" width="50" />
+
 
 <br>
 <br>
