@@ -58,9 +58,9 @@
 
 
 ## 텍스트 모델 발전 과정
-![Screenshot 2025-06-11 at 4 18 38 PM](https://github.com/user-attachments/assets/17d017de-1c85-469c-911e-1bc5b0c4807a)
+<img src="https://github.com/user-attachments/assets/17d017de-1c85-469c-911e-1bc5b0c4807a" width="500" />
 
-![Screenshot 2025-06-11 at 4 19 30 PM](https://github.com/user-attachments/assets/01474372-cb88-47ed-8132-0065a9f9fcca)
+<img src="https://github.com/user-attachments/assets/01474372-cb88-47ed-8132-0065a9f9fcca" width="500" />
 
 ## 보이스 모델 발전 과정
 
