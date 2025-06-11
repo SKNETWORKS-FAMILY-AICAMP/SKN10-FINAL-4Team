@@ -20,6 +20,12 @@
    
 ![Screenshot 2025-06-11 at 11 29 22 AM](https://github.com/user-attachments/assets/3fd385ab-c148-4c77-acf5-9b4393d59b9d)
 
+## Team Goodfellow
+
+| ![Hyeonjoon](https://github.com/hyeonjoonpark.png?size=100) | ![Alice](https://github.com/hyeonjoonpark.png?size=100) | ![Jin](https://github.com/hyeonjoonpark.png?size=100) | ![Sara](https://github.com/hyeonjoonpark.png?size=100) |
+|:--:|:--:|:--:|:--:|
+| **이종원**<br/>Product Manger | **박현준**<br/>Voice AI Dev | **김재혁**<br/>LLM Developer | **전서빈**<br/>Data Engineer |
+| [GitHub](https://github.com/hyeonjoonpark) | [GitHub](https://github.com/alicek) | [GitHub](https://github.com/jinlee) | [GitHub](https://github.com/sarachoi) |
 </div>
 
 <br/>
