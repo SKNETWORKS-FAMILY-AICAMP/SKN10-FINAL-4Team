@@ -6,7 +6,11 @@
 </div>
 
 <div align="center">
-<img width="700" height="300" src="https://github.com/user-attachments/assets/6e4ead57-5ec5-49c7-8d72-d9c7b0762392"/>
+<!-- <img width="700" height="300" src="https://github.com/user-attachments/assets/6e4ead57-5ec5-49c7-8d72-d9c7b0762392"/>-->
+   
+![Screenshot_2025-06-11_at_3 29 37_PM-removebg-preview](https://github.com/user-attachments/assets/2a09f271-ffa7-4ce9-a896-bfa1bb36ee96)
+![seyeon-removebg-preview](https://github.com/user-attachments/assets/babb77ea-f2f4-4725-81b5-046a0f3c8782)
+
 <!-- <img width="350" height="350" src="https://github.com/user-attachments/assets/e536447a-a6b9-452f-b110-02281e833eee"/> -->
 <!-- <img width="330" height="330" src="https://github.com/user-attachments/assets/31d15df3-f0ea-4725-98d2-5bdb89047a13"/>
  -->
