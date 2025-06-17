@@ -18,18 +18,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 #구글 로그인 설정
 load_dotenv()
-GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
-GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-RDS_HOSTNAME = os.getenv("RDS_HOSTNAME")
-RDS_DB_NAME = os.getenv("RDS_DB_NAME")
-RDS_USERNAME = os.getenv("RDS_USERNAME")
-RDS_PASSWORD = os.getenv("RDS_PASSWORD")
-RDS_PORT = os.getenv("RDS_PORT")
-SECRET_KEY = 'django-insecure-z#0n5lyt^32%)3m2@tj970#!5t3(2a^dsfj2upfl)obtqy*4fp'
+# GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+# GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+# RDS_HOSTNAME = os.getenv("RDS_HOSTNAME")
+# RDS_DB_NAME = os.getenv("RDS_DB_NAME")
+# RDS_USERNAME = os.getenv("RDS_USERNAME")
+# RDS_PASSWORD = os.getenv("RDS_PASSWORD")
+# RDS_PORT = os.getenv("RDS_PORT")
+
+SECRET_KEY = "django-insecure-z#0n5lyt^32%)3m2@tj970#!5t3(2a^dsfj2upfl)obtqy*4fp"
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["http://django-env.eba-dpgbgjxa.ap-northeast-2.elasticbeanstalk.com/", "localhost", "127.0.0.1", '*']
+ALLOWED_HOSTS = [".elasticbeanstalk.com", "localhost", "127.0.0.1", '*']
 SITE_ID = 1
 
 
@@ -109,8 +110,8 @@ SOCIALACCOUNT_PROVIDERS = {
     },
     "google": {
         "APP": {
-            "client_id": GOOGLE_CLIENT_ID,
-            "secret": GOOGLE_CLIENT_SECRET,
+            "client_id": os.environ["GOOGLE_CLIENT_ID"],
+            "secret": os.environ["GOOGLE_CLIENT_SECRET"],
             "key": ""
         },
         "SCOPE": [
@@ -129,23 +130,23 @@ AUTH_USER_MODEL = 'users.User'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': RDS_DB_NAME,
-#         'USER': RDS_USERNAME,
-#         'PASSWORD': RDS_PASSWORD,
-#         'HOST': RDS_HOSTNAME,
-#         'PORT': RDS_PORT,
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ["RDS_DB_NAME"],
+        'USER': os.environ["RDS_USERNAME"],
+        'PASSWORD': os.environ["RDS_PASSWORD"],
+        'HOST': os.environ["RDS_HOSTNAME"],
+        'PORT': os.environ["RDS_PORT"],
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 STATIC_ROOT = 'static'

@@ -1,6 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from .models import Influencer
+from .forms import InfluencerForm
 import json
 import openai
 import os
@@ -108,3 +109,19 @@ def generate_tts_audio(influencer, answer):
         f.write(audio_content)
     audio_url = f"/media/influencers/{influencer.id}/tts_audio/{audio_filename}"
     return audio_url
+
+
+
+@csrf_exempt
+def create_influencer(request):
+    if request.method == 'POST':
+        mode = request.POST.get('mode', 'manual')
+        form = InfluencerForm(request.POST, request.FILES)
+        if form.is_valid():
+            influencer = form.save(commit=False)
+            influencer.created_mode = mode
+            influencer.save()
+            return redirect('landingpage')  # or wherever you want to go
+    else:
+        form = InfluencerForm()
+    return render(request, 'influencers/create_influencer.html', {'form': form})
