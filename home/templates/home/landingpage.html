@@ -10,13 +10,12 @@
 <body>
     <div class="landing-container">
         <aside class="sidebar">
-            <div class="sidebar-logo">goodfellow.ai</div>
+            <div class="sidebar-logo">LUMINA.</div>
             <!-- <button class="sidebar-btn create">+ Create</button>
             <button class="sidebar-btn discover">Discover</button> -->
             <input class="sidebar-search" type="text" placeholder="Search">
             <div class="sidebar-today">Today</div>
             <div class="sidebar-user-list">
-                <div class="sidebar-user"><img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Sam"> Sam Rothstein</div>
                 <div class="sidebar-user"><img src="{% static 'home/gamst.png' %}" alt="Gamst"> 감스트</div>
             </div>
             <div class="sidebar-bottom">
@@ -34,22 +33,41 @@
                 <input class="main-search" type="text" placeholder="Search">
             </div>
             <section class="section">
+                <button id="openCreateModal" class="sidebar-btn create">+ Create Influencer</button>
                 <h2>For you</h2>
                 <div class="card-row">
                     {% for influencer in influencers %}
-                    <a href="{% url 'influencer_chat' influencer.pk %}" class="card-link">
-                        <div class="card influencer-card-horizontal">
-                            <img src="{% if influencer.image %}{{ influencer.image.url }}{% else %}{% static 'home/gamst.png' %}{% endif %}" class="card-img influencer-img-left" alt="{{ influencer.name }}">
-                            <div class="influencer-card-content">
-                                <div class="card-title">{{ influencer.name }}</div>
-                                <br>
-                                <div class="card-author">{{ influencer.description }}</div>
-                                <br>
-                                <div class="card-desc">채팅 가격: {{ influencer.price_per_chat }}원</div>
-                                <div class="card-stats">💬 {{ influencer.total_chat_received }} 👍 {{ influencer.thumbs_up }}</div>
+                        {% if influencer.is_ready %}
+                            <a href="{% url 'influencer_chat' influencer.pk %}" class="card-link">
+                                <div class="card influencer-card-horizontal">
+                                    <img src="{% if influencer.image %}{{ influencer.image.url }}{% else %}{% static 'home/gamst.png' %}{% endif %}" class="card-img influencer-img-left" alt="{{ influencer.name }}">
+                                    <div class="influencer-card-content">
+                                        <div class="card-title">{{ influencer.name }}</div>
+                                        <br>
+                                        <div class="card-author">{{ influencer.description }}</div>
+                                        <br>
+                                        {% if influencer.created_mode == 'auto' %}
+                                            <div class="card-status" style="background:#2196f3;">AUTO</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </a>
+                        {% else %}
+                            <div class="card influencer-card-horizontal card-disabled">
+                                <img src="{% if influencer.image %}{{ influencer.image.url }}{% else %}{% static 'home/gamst.png' %}{% endif %}" class="card-img influencer-img-left" alt="{{ influencer.name }}">
+                                <div class="influencer-card-content">
+                                    <div class="card-title">{{ influencer.name }}</div>
+                                    <br>
+                                    <div class="card-author">{{ influencer.description }}</div>
+                                    <br>
+                                    <div class="card-status">준비중
+                                        {% if influencer.created_mode == 'auto' %}
+                                            <span style="background:#2196f3; color:#fff; border-radius:6px; padding:2px 8px; margin-left:8px; font-size:0.9em;">AUTO</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </section>
@@ -76,5 +94,65 @@
             </section>
         </main>
     </div>
+    <div id="createInfluencerModal" class="modal" style="display:none;">
+        <div class="modal-content">
+          <span class="close" id="closeModal">&times;</span>
+          <h2>Create Influencer</h2>
+          <form id="createInfluencerForm" method="post" enctype="multipart/form-data" action="{% url 'create_influencer' %}">
+            {% csrf_token %}
+            <div class="mode-switch">
+              <label>
+                <input type="radio" name="mode" value="auto" checked> Auto
+              </label>
+              <label>
+                <input type="radio" name="mode" value="manual"> Manual
+              </label>
+            </div>
+            <label>Name: <input type="text" name="name" required></label>
+            <label>YouTube URL: <input type="url" name="youtube_url"></label>
+            <label>Picture: <input type="file" name="image"></label>
+            <div id="manualFields" style="display:none;">
+              <div class="manual-fields-grid">
+                <label>Description: <textarea name="description"></textarea></label>
+                <label>Voice ID: <input type="text" name="voiceid"></label>
+                <label>Feature Model ID: <input type="text" name="feature_model_id"></label>
+                <label>Feature System Prompt: <textarea name="feature_system_prompt"></textarea></label>
+                <label>Speech Model ID: <input type="text" name="speech_model_id"></label>
+                <label>Speech System Prompt: <textarea name="speech_system_prompt"></textarea></label>
+              </div>
+            </div>
+            <button type="submit">Create</button>
+        </form>
+        </div>
+      </div>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const openBtn = document.getElementById('openCreateModal');
+        const closeBtn = document.getElementById('closeModal');
+        const modal = document.getElementById('createInfluencerModal');
+        const autoRadio = document.querySelector('input[name="mode"][value="auto"]');
+        const manualRadio = document.querySelector('input[name="mode"][value="manual"]');
+        const manualFields = document.getElementById('manualFields');
+
+        openBtn.addEventListener('click', function() {
+            modal.style.display = 'flex';
+        });
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+        window.addEventListener('click', function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        autoRadio.addEventListener('change', function() {
+            if (autoRadio.checked) manualFields.style.display = 'none';
+        });
+        manualRadio.addEventListener('change', function() {
+            if (manualRadio.checked) manualFields.style.display = 'block';
+        });
+    });
+    </script>
 </html>

@@ -1,6 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from .models import Influencer
+from .forms import InfluencerForm
 import json
 import openai
 import os
@@ -12,6 +13,7 @@ import uuid
 from elevenlabs import VoiceSettings
 from elevenlabs.client import ElevenLabs
 from influencers.models import Influencer
+from django.views.decorators.csrf import csrf_exempt
 
 load_dotenv()  # take environment variables from .env.
 
@@ -29,6 +31,7 @@ def influencer_chat(request, pk):
     return render(request, 'influencers/chat.html', {'influencer': influencer})
 
 #유저 잇풋 openai에 전달
+@csrf_exempt
 def send_message(request, id):
     if request.method == 'POST':
         message = request.POST.get('message')
@@ -38,10 +41,10 @@ def send_message(request, id):
             #인플루언서 모델 가져오기
             influencer = get_object_or_404(Influencer, pk=id)
             #json으로 받은 메시지를 openai에 전달
-            response = send_message_to_gpt(message, influencer.response_model_id, influencer.response_system_prompt)
+            response = send_message_to_gpt(message, influencer.feature_model_id, influencer.feature_system_prompt)
             print(f"Answer: {response}")
 
-            answer = send_message_to_gpt(response, influencer.speech_style_model_id, influencer.speech_style_system_prompt)
+            answer = send_message_to_gpt(response, influencer.speech_model_id, influencer.speech_system_prompt)
             print(f"Answer: {answer}")
 
             audio_url = generate_tts_audio(influencer, answer)
@@ -106,3 +109,19 @@ def generate_tts_audio(influencer, answer):
         f.write(audio_content)
     audio_url = f"/media/influencers/{influencer.id}/tts_audio/{audio_filename}"
     return audio_url
+
+
+
+@csrf_exempt
+def create_influencer(request):
+    if request.method == 'POST':
+        mode = request.POST.get('mode', 'manual')
+        form = InfluencerForm(request.POST, request.FILES)
+        if form.is_valid():
+            influencer = form.save(commit=False)
+            influencer.created_mode = mode
+            influencer.save()
+            return redirect('landingpage')  # or wherever you want to go
+    else:
+        form = InfluencerForm()
+    return render(request, 'influencers/create_influencer.html', {'form': form})
