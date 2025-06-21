@@ -16,7 +16,7 @@ class Influencer(models.Model):
     feature_system_prompt = models.TextField(null=True, blank=True, help_text="System Prompt")
     speech_model_id = models.CharField(max_length=100, null=True, blank=True, help_text="Reflect Speech OpenAI Model ID")
     speech_system_prompt = models.TextField(null=True, blank=True, help_text="Reflect Speech System Prompt")
-    created_mode = models.CharField(max_length=10, choices=[('auto', 'Auto'), ('manual', 'Manual')], default='manual')
+    created_mode = models.CharField(max_length=15, choices=[('finetune', 'Finetune'), ('non-finetune', 'Non-Finetune')], default='non-finetune')
 
 
     def is_ready(self):
@@ -35,7 +35,3 @@ class Influencer(models.Model):
     def __str__(self):
         return self.name
     
-
-
-
-
