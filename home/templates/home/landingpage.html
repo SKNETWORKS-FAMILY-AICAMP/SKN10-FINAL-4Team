@@ -36,7 +36,7 @@
                 {% if user.is_staff or user.is_superuser %}
                     <button id="openCreateModal" class="sidebar-btn create">+ Create Influencer</button>
                 {% endif %}
-                <h2>For you</h2>
+                <h2>Featured</h2>
                 <div class="card-row">
                     {% for influencer in influencers %}
                         {% if influencer.is_ready %}
@@ -97,27 +97,6 @@
                             </div>
                         {% endif %}
                     {% endfor %}
-                </div>
-            </section>
-            <section class="section">
-                <h2>Featured</h2>
-                <div class="card-row">
-                    <!-- defein cards -->
-                    
-                </div>
-            </section>
-            <section class="section">
-                <h2>Popular</h2>
-                <div class="card-row">
-                    <!-- defein cards -->
-                   
-                </div>
-            </section>
-            <section class="section">
-                <h2>Try these</h2>
-                <div class="card-row">
-                                   <!-- defein cards -->
-
                 </div>
             </section>
         </main>
