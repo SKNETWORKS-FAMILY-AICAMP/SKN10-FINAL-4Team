@@ -18,7 +18,6 @@ class Influencer(models.Model):
     speech_system_prompt = models.TextField(null=True, blank=True, help_text="Reflect Speech System Prompt")
     created_mode = models.CharField(max_length=15, choices=[('finetune', 'Finetune'), ('non-finetune', 'Non-Finetune')], default='non-finetune')
 
-
     def is_ready(self):
         # List all fields that must be filled for production
         required_fields = [
@@ -34,4 +33,20 @@ class Influencer(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def average_rating(self):
+        return self.ratings.aggregate(models.Avg('stars'))['stars__avg'] or 0
+
+    @property
+    def rating_count(self):
+        return self.ratings.count()
+
+class InfluencerRating(models.Model):
+    influencer = models.ForeignKey('Influencer', on_delete=models.CASCADE, related_name='ratings')
+    stars = models.PositiveSmallIntegerField()  # 1 to 5
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.influencer.name} - {self.stars} stars"
     

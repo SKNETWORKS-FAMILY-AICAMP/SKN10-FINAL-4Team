@@ -8,16 +8,58 @@
     <link rel="stylesheet" href="{% static 'influencers/chat.css' %}">
 </head>
 <script>
+    const influencerImageUrl = "{% if influencer.image %}{{ influencer.image.url }}{% else %}{% static 'home/gamst.png' %}{% endif %}";
+</script>
+<!-- <elevenlabs-convai agent-id="agent_01jye3pxkbfqft10w4c8g1yx9v"></elevenlabs-convai> -->
+<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+<script>
     document.addEventListener('DOMContentLoaded', function() {
         const chatForm = document.getElementById('chat-form');
         const chatLog = document.getElementById('chat-log');
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.querySelector('.chat-send-btn');
         const influencerName = "{{ influencer.name|escapejs }}"; // Get from Django context
+        const callBtn = document.getElementById('call-btn');
+        
+        // Function to scroll to bottom
+        function scrollToBottom() {
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
+        
+        // Function to add loading bubble
+        function addLoadingBubble() {
+            const loadingBubble = `
+                <div class="bubble-row bubble-row-ai">
+                    <div class="bubble-meta bubble-meta-ai">
+                        <img src="${influencerImageUrl}" class="bubble-meta-img" alt="${influencerName}">
+                        ${influencerName}
+                    </div>
+                    <div class="bubble bubble-loading">
+                        <div class="loading-dots">
+                            <div class="loading-dot"></div>
+                            <div class="loading-dot"></div>
+                            <div class="loading-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            chatLog.innerHTML += loadingBubble;
+            scrollToBottom();
+            return loadingBubble;
+        }
+        
+        // Function to remove loading bubble
+        function removeLoadingBubble() {
+            const loadingBubble = chatLog.querySelector('.bubble-loading');
+            if (loadingBubble) {
+                loadingBubble.closest('.bubble-row').remove();
+            }
+        }
     
         if (chatForm) {
             chatForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                const input = document.getElementById('chat-input');
-                const message = input.value;
+                const message = chatInput.value;
                 if (!message.trim()) return;
     
                 // Append user message
@@ -27,6 +69,17 @@
                         <div class="bubble bubble-user">${message}</div>
                     </div>
                 `;
+                
+                // Clear input and scroll to bottom
+                chatInput.value = '';
+                scrollToBottom();
+                
+                // Add loading bubble
+                addLoadingBubble();
+                
+                // Disable input and send button
+                chatInput.disabled = true;
+                sendBtn.disabled = true;
     
                 fetch("{% url 'send_message' influencer.id %}", {
                     method: "POST",
@@ -38,25 +91,153 @@
                 })
                 .then(response => response.json())
                 .then(data => {
+                    // Remove loading bubble
+                    removeLoadingBubble();
+                    
                     // Append influencer answer
                     chatLog.innerHTML += `
                         <div class="bubble-row bubble-row-ai">
-                            <div class="bubble-meta bubble-meta-ai">${influencerName}</div>
+                            <div class="bubble-meta bubble-meta-ai">
+                                <img src="${influencerImageUrl}" class="bubble-meta-img" alt="${influencerName}">
+                                ${influencerName}
+                            </div>
                             <div class="bubble bubble-ai">${data.answer}</div>
                         </div>
                     `;
+                    
                     // Play audio if available
                     if (data.audio_url) {
                         const audio = new Audio(data.audio_url);
                         audio.play();
                     }
-                    input.value = '';
-                    chatLog.scrollTop = chatLog.scrollHeight;
+                    
+                    // Scroll to bottom after response
+                    scrollToBottom();
+                    
+                    // Re-enable input and send button
+                    chatInput.disabled = false;
+                    sendBtn.disabled = false;
+                    chatInput.focus();
+                })
+                .catch(error => {
+                    // Remove loading bubble on error
+                    removeLoadingBubble();
+                    
+                    // Show error message
+                    chatLog.innerHTML += `
+                        <div class="bubble-row bubble-row-ai">
+                            <div class="bubble-meta bubble-meta-ai">
+                                <img src="${influencerImageUrl}" class="bubble-meta-img" alt="${influencerName}">
+                                ${influencerName}
+                            </div>
+                            <div class="bubble bubble-ai">죄송합니다. 오류가 발생했습니다. 다시 시도해주세요.</div>
+                        </div>
+                    `;
+                    scrollToBottom();
+                    
+                    // Re-enable input and send button
+                    chatInput.disabled = false;
+                    sendBtn.disabled = false;
+                    chatInput.focus();
+                    console.error('Error:', error);
                 });
-                input.value = '';
-                chatLog.scrollTop = chatLog.scrollHeight;
             });
         }
+        
+        if (callBtn) {
+            callBtn.addEventListener('click', function() {
+                // Prevent multiple widgets
+                if (!document.getElementById('convai-widget-container')) {
+                    // Create a container for the widget
+                    const container = document.createElement('div');
+                    container.id = 'convai-widget-container';
+                    container.style.position = 'fixed';
+                    container.style.bottom = '90px'; // adjust as needed
+                    container.style.right = '40px'; // adjust as needed
+                    container.style.zIndex = '3000';
+                    container.innerHTML = `
+                        <div style="position:relative;">
+                            <button id="close-convai-widget" style="position:absolute;top:-18px;right:-18px;background:#232228;color:#fff;border:none;border-radius:50%;width:32px;height:32px;font-size:1.2rem;cursor:pointer;z-index:10;">&times;</button>
+                            <elevenlabs-convai agent-id="agent_01jye3pxkbfqft10w4c8g1yx9v"></elevenlabs-convai>
+                        </div>
+                    `;
+                    document.body.appendChild(container);
+                    // Add close functionality
+                    document.getElementById('close-convai-widget').onclick = function() {
+                        container.remove();
+                    };
+                }
+            });
+        }
+        
+        // Auto-scroll when new content is added
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList') {
+                    scrollToBottom();
+                }
+            });
+        });
+        
+        observer.observe(chatLog, {
+            childList: true,
+            subtree: true
+        });
+        
+        // Initial scroll to bottom
+        scrollToBottom();
+
+        const stars = document.querySelectorAll('#star-rating .star');
+        const ratingMessage = document.getElementById('rating-message');
+        let selectedRating = 0;
+        const ratingKey = `rated_influencer_{{ influencer.id }}`;
+
+        // Check if already rated
+        if (localStorage.getItem(ratingKey)) {
+            stars.forEach(s => s.style.pointerEvents = 'none');
+            ratingMessage.textContent = '이미 평가하셨습니다.';
+        }
+
+        stars.forEach(star => {
+            star.addEventListener('mouseover', function() {
+                const val = parseInt(this.getAttribute('data-value'));
+                stars.forEach(s => s.style.color = (parseInt(s.getAttribute('data-value')) <= val) ? '#ff9800' : '#b0b0b0');
+            });
+            star.addEventListener('mouseout', function() {
+                stars.forEach(s => s.style.color = (parseInt(s.getAttribute('data-value')) <= selectedRating) ? '#ff9800' : '#b0b0b0');
+            });
+            star.addEventListener('click', function() {
+                if (localStorage.getItem(ratingKey)) return;
+                selectedRating = parseInt(this.getAttribute('data-value'));
+                fetch(`/influencers/rate/{{ influencer.id }}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `stars=${selectedRating}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        ratingMessage.textContent = '감사합니다! 평가가 저장되었습니다.';
+                        localStorage.setItem(ratingKey, '1');
+                        stars.forEach(s => s.style.pointerEvents = 'none');
+                        // Fetch new average and count
+                        fetch(`/influencers/rate/{{ influencer.id }}/stats/`)
+                        .then(res => res.json())
+                        .then(stats => {
+                            const avgDiv = document.querySelector('#rating-section div:last-child');
+                            if (avgDiv) {
+                                avgDiv.textContent = `평균 별점: ${stats.average_rating.toFixed(1)} / 5 (${stats.rating_count}명 참여)`;
+                            }
+                        });
+                    } else {
+                        ratingMessage.textContent = '오류가 발생했습니다.';
+                    }
+                });
+            });
+        });
     });
 </script>
 <body>
@@ -67,18 +248,33 @@
                 <img src="{% if influencer.image %}{{ influencer.image.url }}{% else %}{% static 'home/gamst.png' %}{% endif %}" class="profile-img" alt="{{ influencer.name }}">
                 <div class="profile-name">{{ influencer.name }}</div>
                 <div class="profile-desc">{{ influencer.description }}</div>
-                <div class="profile-author">By {{ influencer.name }}</div>
             </div>
             <div class="chat-footer">
-                This is A.I. and not a real person. Treat everything it says as fiction
+                모든 대화내용은 인공지능이 생성한 허구이며, 실존하는 인물과는 절대 무관합니다.
             </div>
-            <div class="chat-area">
+            <div class="chat-area chat-content-width">
                 <div id="chat-log" class="chat-log"></div>
+                <div id="rating-section" style="text-align:center; margin-top:24px;">
+                    <span id="star-rating">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                    </span>
+                    <div id="rating-message" style="margin: 12px 0 0 0; min-height: 1.5em;"></div>
+                    <div style="margin-top:8px; color:#b0b0b0; font-size:1rem;">
+                        평균 별점: {{ influencer.average_rating|floatformat:1 }} / 5 ({{ influencer.rating_count }}명 참여)
+                    </div>
+                </div>
             </div>
             <form class="chat-input-section" id="chat-form">
-                <div class="chat-input-box">
+                <div class="chat-input-box chat-content-width">
                     <input class="chat-input" id="chat-input" type="text" placeholder="Message {{ influencer.name }}..." autocomplete="off">
                     <button class="chat-send-btn" type="submit">&#9658;</button>
+                    <button class="chat-call-btn" type="button" id="call-btn">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.2 2.2z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
                 </div>
             </form>
         </div>

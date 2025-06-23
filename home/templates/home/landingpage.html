@@ -16,10 +16,10 @@
             <input class="sidebar-search" type="text" placeholder="Search">
             <div class="sidebar-today">Today</div>
             <div class="sidebar-user-list">
-                <div class="sidebar-user"><img src="{% static 'home/gamst.png' %}" alt="Gamst"> 감스트</div>
+                <!-- <div class="sidebar-user"><img src="{% static 'home/gamst.png' %}" alt="Gamst"> 감스트</div> -->
             </div>
             <div class="sidebar-bottom">
-               
+                
                 <button class="sidebar-btn upgrade" onclick="location.href='/accounts/logout'">로그아웃</button>
                 <div class="sidebar-profile">
                     <span class="sidebar-profile-icon">G</span> {{ user.name|default:user.username|default:"Guest" }}
@@ -33,7 +33,9 @@
                 <input class="main-search" type="text" placeholder="Search">
             </div>
             <section class="section">
-                <button id="openCreateModal" class="sidebar-btn create">+ Create Influencer</button>
+                {% if user.is_staff or user.is_superuser %}
+                    <button id="openCreateModal" class="sidebar-btn create">+ Create Influencer</button>
+                {% endif %}
                 <h2>For you</h2>
                 <div class="card-row">
                     {% for influencer in influencers %}
@@ -43,6 +45,19 @@
                                     <img src="{% if influencer.image %}{{ influencer.image.url }}{% else %}{% static 'home/gamst.png' %}{% endif %}" class="card-img influencer-img-left" alt="{{ influencer.name }}">
                                     <div class="influencer-card-content">
                                         <div class="card-title">{{ influencer.name }}</div>
+                                        <div class="card-stars">
+                                            {% with avg=influencer.average_rating %}
+                                                {% for i in "12345" %}
+                                                    {% if avg|floatformat:1 >= i %}
+                                                        <span class="star">&#9733;</span>
+                                                    {% elif avg|floatformat:1 >= i|add:'-0.5' %}
+                                                        <span class="star star-half">&#9733;</span>
+                                                    {% else %}
+                                                        <span class="star star-empty">&#9733;</span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endwith %}
+                                        </div>
                                         <br>
                                         <div class="card-author">{{ influencer.description }}</div>
                                         <br>
@@ -57,6 +72,19 @@
                                 <img src="{% if influencer.image %}{{ influencer.image.url }}{% else %}{% static 'home/gamst.png' %}{% endif %}" class="card-img influencer-img-left" alt="{{ influencer.name }}">
                                 <div class="influencer-card-content">
                                     <div class="card-title">{{ influencer.name }}</div>
+                                    <div class="card-stars">
+                                        {% with avg=influencer.average_rating %}
+                                            {% for i in "12345" %}
+                                                {% if avg|floatformat:1 >= i %}
+                                                    <span class="star">&#9733;</span>
+                                                {% elif avg|floatformat:1 >= i|add:'-0.5' %}
+                                                    <span class="star star-half">&#9733;</span>
+                                                {% else %}
+                                                    <span class="star star-empty">&#9733;</span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endwith %}
+                                    </div>
                                     <br>
                                     <div class="card-author">{{ influencer.description }}</div>
                                     <br>

@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
-from .models import Influencer
+from .models import Influencer, InfluencerRating
 from .forms import InfluencerForm
 import json
 import openai
@@ -14,6 +14,7 @@ from elevenlabs import VoiceSettings
 from elevenlabs.client import ElevenLabs
 from influencers.models import Influencer
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 load_dotenv()  # take environment variables from .env.
 
@@ -125,3 +126,22 @@ def create_influencer(request):
     else:
         form = InfluencerForm()
     return render(request, 'influencers/create_influencer.html', {'form': form})
+
+@require_POST
+def rate_influencer(request, influencer_id):
+    influencer = Influencer.objects.get(pk=influencer_id)
+    try:
+        stars = int(request.POST.get('stars'))
+    except (TypeError, ValueError):
+        return JsonResponse({'error': 'Invalid star rating'}, status=400)
+    if stars < 1 or stars > 5:
+        return JsonResponse({'error': 'Invalid star rating'}, status=400)
+    InfluencerRating.objects.create(influencer=influencer, stars=stars)
+    return JsonResponse({'success': True})
+
+def influencer_rating_stats(request, influencer_id):
+    influencer = Influencer.objects.get(pk=influencer_id)
+    return JsonResponse({
+        'average_rating': influencer.average_rating or 0,
+        'rating_count': influencer.rating_count
+    })

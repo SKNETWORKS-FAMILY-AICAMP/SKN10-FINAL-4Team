@@ -610,3 +610,30 @@ body, html {
     font-size: 0.9em;
     font-weight: 600;
 }
+
+.card-stars {
+    margin: 4px 0 0 0;
+    font-size: 1.2rem;
+}
+.card-stars .star {
+    color: #ff9800;
+    margin-right: 2px;
+}
+.card-stars .star.star-empty {
+    color: #35343a;
+}
+
+.star-half {
+    position: relative;
+    display: inline-block;
+    color: #ff9800;
+}
+.star-half::after {
+    content: '\2605';
+    color: #35343a;
+    position: absolute;
+    left: 50%;
+    width: 50%;
+    overflow: hidden;
+    top: 0;
+}
