@@ -20,8 +20,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 48px;
-    margin-bottom: 24px;
+    margin-top: 24px;
+    margin-bottom: 12px;
 }
 .profile-img {
     width: 90px;
@@ -32,13 +32,13 @@ body {
     border: 3px solid #232228;
 }
 .profile-name {
-    font-size: 1.3rem;
+    font-size: 1.0rem;
     font-weight: 700;
     margin-bottom: 6px;
 }
 .profile-desc {
     color: #b0b0b0;
-    font-size: 1.05rem;
+    font-size: 0.85rem;
     margin-bottom: 2px;
 }
 .profile-author {
@@ -239,11 +239,11 @@ body {
 
 .bubble {
     border-radius: 18px;
-    padding: 14px 22px;
-    font-size: 1.08rem;
+    padding: 10px 17px;
+    font-size: 0.85rem;
     box-shadow: 0 2px 12px rgba(0,0,0,0.10);
     word-break: break-word;
-    min-width: 48px;
+    /* min-width: 48px; */
     line-height: 1.6;
     display: inline-block;
     max-width: 80%;
