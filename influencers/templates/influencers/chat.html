@@ -187,61 +187,76 @@
         // Initial scroll to bottom
         scrollToBottom();
 
-        const stars = document.querySelectorAll('#star-rating .star');
-        const ratingMessage = document.getElementById('rating-message');
-        let selectedRating = 0;
+        // Modal rating logic
+        const backBtn = document.getElementById('backBtn');
+        const ratingModal = document.getElementById('ratingModal');
+        const closeRatingModal = document.getElementById('closeRatingModal');
+        const modalStars = document.querySelectorAll('#modal-star-rating .star');
+        const modalRatingMessage = document.getElementById('modal-rating-message');
+        const submitRatingBtn = document.getElementById('submitRatingBtn');
+        let modalSelectedRating = 0;
+
         const ratingKey = `rated_influencer_{{ influencer.id }}`;
+        backBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (localStorage.getItem(ratingKey)) {
+                window.location.href = "{% url 'landingpage' %}";
+                return;
+            }
+            ratingModal.style.display = 'flex';
+        });
 
-        // Check if already rated
-        if (localStorage.getItem(ratingKey)) {
-            stars.forEach(s => s.style.pointerEvents = 'none');
-            ratingMessage.textContent = '이미 평가하셨습니다.';
-        }
+        closeRatingModal.addEventListener('click', function() {
+            ratingModal.style.display = 'none';
+        });
 
-        stars.forEach(star => {
+        modalStars.forEach(star => {
             star.addEventListener('mouseover', function() {
                 const val = parseInt(this.getAttribute('data-value'));
-                stars.forEach(s => s.style.color = (parseInt(s.getAttribute('data-value')) <= val) ? '#ff9800' : '#b0b0b0');
+                modalStars.forEach(s => s.style.color = (parseInt(s.getAttribute('data-value')) <= val) ? '#ff9800' : '#b0b0b0');
             });
             star.addEventListener('mouseout', function() {
-                stars.forEach(s => s.style.color = (parseInt(s.getAttribute('data-value')) <= selectedRating) ? '#ff9800' : '#b0b0b0');
+                modalStars.forEach(s => s.style.color = (parseInt(s.getAttribute('data-value')) <= modalSelectedRating) ? '#ff9800' : '#b0b0b0');
             });
             star.addEventListener('click', function() {
-                if (localStorage.getItem(ratingKey)) return;
-                selectedRating = parseInt(this.getAttribute('data-value'));
-                fetch(`/influencers/rate/{{ influencer.id }}/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}',
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: `stars=${selectedRating}`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        ratingMessage.textContent = '감사합니다! 평가가 저장되었습니다.';
-                        localStorage.setItem(ratingKey, '1');
-                        stars.forEach(s => s.style.pointerEvents = 'none');
-                        // Fetch new average and count
-                        fetch(`/influencers/rate/{{ influencer.id }}/stats/`)
-                        .then(res => res.json())
-                        .then(stats => {
-                            const avgDiv = document.querySelector('#rating-section div:last-child');
-                            if (avgDiv) {
-                                avgDiv.textContent = `평균 별점: ${stats.average_rating.toFixed(1)} / 5 (${stats.rating_count}명 참여)`;
-                            }
-                        });
-                    } else {
-                        ratingMessage.textContent = '오류가 발생했습니다.';
-                    }
-                });
+                modalSelectedRating = parseInt(this.getAttribute('data-value'));
+                modalStars.forEach(s => s.classList.remove('selected'));
+                for (let i = 0; i < modalSelectedRating; i++) {
+                    modalStars[i].classList.add('selected');
+                }
+            });
+        });
+
+        submitRatingBtn.addEventListener('click', function() {
+            if (modalSelectedRating === 0) {
+                modalRatingMessage.textContent = '별점을 선택해주세요!';
+                return;
+            }
+            fetch(`/influencers/rate/{{ influencer.id }}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `stars=${modalSelectedRating}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    modalRatingMessage.textContent = '감사합니다! 평가가 저장되었습니다.';
+                    localStorage.setItem(ratingKey, '1');
+                    setTimeout(() => {
+                        window.location.href = "{% url 'landingpage' %}";
+                    }, 1000);
+                } else {
+                    modalRatingMessage.textContent = '오류가 발생했습니다.';
+                }
             });
         });
     });
 </script>
 <body>
-    <a href="{% url 'landingpage' %}" class="back-btn">뒤로가기</a>
+    <a href="#" class="back-btn" id="backBtn">뒤로가기</a>
     <div class="chat-container">
         <div class="chat-wrapper">
             <div class="profile-section">
@@ -254,19 +269,6 @@
             </div>
             <div class="chat-area chat-content-width">
                 <div id="chat-log" class="chat-log"></div>
-                <div id="rating-section" style="text-align:center; margin-top:24px;">
-                    <span id="star-rating">
-                        <span class="star" data-value="1">&#9733;</span>
-                        <span class="star" data-value="2">&#9733;</span>
-                        <span class="star" data-value="3">&#9733;</span>
-                        <span class="star" data-value="4">&#9733;</span>
-                        <span class="star" data-value="5">&#9733;</span>
-                    </span>
-                    <div id="rating-message" style="margin: 12px 0 0 0; min-height: 1.5em;"></div>
-                    <div style="margin-top:8px; color:#b0b0b0; font-size:1rem;">
-                        평균 별점: {{ influencer.average_rating|floatformat:1 }} / 5 ({{ influencer.rating_count }}명 참여)
-                    </div>
-                </div>
             </div>
             <form class="chat-input-section" id="chat-form">
                 <div class="chat-input-box chat-content-width">
@@ -277,6 +279,22 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+    <!-- Move modal outside chat-container for proper centering -->
+    <div id="ratingModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" id="closeRatingModal">&times;</span>
+            <h2>별점 평가</h2>
+            <div id="modal-star-rating" style="text-align:center; margin-bottom: 16px;">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+            <div id="modal-rating-message" style="text-align:center; min-height:1.5em; color:#ff9800;"></div>
+            <button id="submitRatingBtn" style="margin: 18px auto 0 auto; display: block; background: #ff9800; color: #232228; border: none; border-radius: 8px; padding: 10px 32px; font-size: 1.1rem; font-weight: 700; cursor: pointer;">제출</button>
         </div>
     </div>
 </body>

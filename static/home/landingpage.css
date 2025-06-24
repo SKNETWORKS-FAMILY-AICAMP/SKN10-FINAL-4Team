@@ -612,8 +612,9 @@ body, html {
 }
 
 .card-stars {
-    margin: 4px 0 0 0;
     font-size: 1.2rem;
+    display: flex;
+    margin: 4px 0 0 0;
 }
 .card-stars .star {
     color: #ff9800;
@@ -622,13 +623,12 @@ body, html {
 .card-stars .star.star-empty {
     color: #35343a;
 }
-
-.star-half {
+.card-stars .star.star-half {
     position: relative;
     display: inline-block;
     color: #ff9800;
 }
-.star-half::after {
+.card-stars .star.star-half::after {
     content: '\2605';
     color: #35343a;
     position: absolute;
@@ -636,4 +636,34 @@ body, html {
     width: 50%;
     overflow: hidden;
     top: 0;
+}
+.card-rating-number-row {
+    margin-top: 2px;
+    font-size: 1.08rem;
+    color: #ff9800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.card-rating-number {
+    font-weight: 700;
+}
+.card-rating-count {
+    color: #b0b0b0;
+    font-size: 1.05rem;
+    margin-left: 2px;
+}
+
+.footer-disclaimer {
+    width: 100vw;
+    text-align: center;
+    color: #b0b0b0;
+    font-size: 1rem;
+    background: #19181d;
+    padding: 18px 0 16px 0;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 100;
+    border-top: 1px solid #232228;
 }

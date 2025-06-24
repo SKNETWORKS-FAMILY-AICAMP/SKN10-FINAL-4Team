@@ -46,17 +46,23 @@
                                     <div class="influencer-card-content">
                                         <div class="card-title">{{ influencer.name }}</div>
                                         <div class="card-stars">
-                                            {% with avg=influencer.average_rating %}
+                                            {% with avg=influencer.average_rating|floatformat:2 %}
                                                 {% for i in "12345" %}
-                                                    {% if avg|floatformat:1 >= i %}
+                                                    {% if avg|floatformat:0 >= i %}
                                                         <span class="star">&#9733;</span>
-                                                    {% elif avg|floatformat:1 >= i|add:'-0.5' %}
+                                                    {% elif avg|floatformat:2 >= i|add:'-0.75' %}
+                                                        <span class="star">&#9733;</span>
+                                                    {% elif avg|floatformat:2 >= i|add:'-0.25' %}
                                                         <span class="star star-half">&#9733;</span>
                                                     {% else %}
                                                         <span class="star star-empty">&#9733;</span>
                                                     {% endif %}
                                                 {% endfor %}
                                             {% endwith %}
+                                        </div>
+                                        <div class="card-rating-number-row">
+                                            <span class="card-rating-number">{{ influencer.average_rating|floatformat:1 }}</span>
+                                            <span class="card-rating-count">({{ influencer.rating_count }}명)</span>
                                         </div>
                                         <br>
                                         <div class="card-author">{{ influencer.description }}</div>
@@ -73,17 +79,23 @@
                                 <div class="influencer-card-content">
                                     <div class="card-title">{{ influencer.name }}</div>
                                     <div class="card-stars">
-                                        {% with avg=influencer.average_rating %}
+                                        {% with avg=influencer.average_rating|floatformat:2 %}
                                             {% for i in "12345" %}
-                                                {% if avg|floatformat:1 >= i %}
+                                                {% if avg|floatformat:0 >= i %}
                                                     <span class="star">&#9733;</span>
-                                                {% elif avg|floatformat:1 >= i|add:'-0.5' %}
+                                                {% elif avg|floatformat:2 >= i|add:'-0.75' %}
+                                                    <span class="star">&#9733;</span>
+                                                {% elif avg|floatformat:2 >= i|add:'-0.25' %}
                                                     <span class="star star-half">&#9733;</span>
                                                 {% else %}
                                                     <span class="star star-empty">&#9733;</span>
                                                 {% endif %}
                                             {% endfor %}
                                         {% endwith %}
+                                    </div>
+                                    <div class="card-rating-number-row">
+                                        <span class="card-rating-number">{{ influencer.average_rating|floatformat:1 }}</span>
+                                        <span class="card-rating-count">({{ influencer.rating_count }}명)</span>
                                     </div>
                                     <br>
                                     <div class="card-author">{{ influencer.description }}</div>
@@ -97,6 +109,9 @@
                             </div>
                         {% endif %}
                     {% endfor %}
+                </div>
+                <div style="text-align:center; color:#b0b0b0; font-size:1rem; margin: 30vh 0 0 0;">
+                    모든 대화내용은 인공지능이 생성한 허구이며, 실존하는 인물과는 절대 무관합니다.
                 </div>
             </section>
         </main>
