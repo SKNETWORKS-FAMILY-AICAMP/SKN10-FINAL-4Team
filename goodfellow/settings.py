@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'home',
     'users',
     'influencers',
+    'history',
 ]
 SOCIALACCOUNT_LOGIN_ON_GET = True
 LOGIN_REDIRECT_URL = '/landingpage'
