@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from .models import Influencer, InfluencerRating
 from .forms import InfluencerForm
@@ -15,6 +16,8 @@ from elevenlabs.client import ElevenLabs
 from influencers.models import Influencer
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from history.models import History
+from users.models import User
 
 load_dotenv()  # take environment variables from .env.
 
@@ -26,6 +29,8 @@ ELEVENLABS_API_KEY = os.getenv('ELEVENLABS_API_KEY')
 client = openai.OpenAI(api_key=OPENAI_API_KEY)
 elevenlabs = ElevenLabs(api_key=ELEVENLABS_API_KEY)
 
+User = get_user_model()
+
 #인플루언서 채팅 페이지 렌더링
 def influencer_chat(request, pk):
     influencer = get_object_or_404(Influencer, pk=pk)
@@ -36,13 +41,25 @@ def influencer_chat(request, pk):
 def send_message(request, id):
     if request.method == 'POST':
         message = request.POST.get('message')
+        user = request.user
         print(f"[BACKEND] Received message for influencer {id}: {message}")
         try:
-
             #인플루언서 모델 가져오기
             influencer = get_object_or_404(Influencer, pk=id)
+            print(influencer)
+
+            if request.user.is_authenticated and isinstance(request.user, User):
+                history_obj, _ = History.objects.get_or_create(
+                    user=user,
+                    influencer=influencer,
+                    defaults={'history': []}
+                )
+                chat_history = history_obj.history
+            else:
+                chat_history = []
+
             #json으로 받은 메시지를 openai에 전달
-            response = send_message_to_gpt(message, influencer.feature_model_id, influencer.feature_system_prompt)
+            response = send_message_to_gpt(message, influencer.feature_model_id, influencer.feature_system_prompt, chat_history)
             print(f"Answer: {response}")
 
             answer = send_message_to_gpt(response, influencer.speech_model_id, influencer.speech_system_prompt)
@@ -50,6 +67,13 @@ def send_message(request, id):
 
             audio_url = generate_tts_audio(influencer, answer)
             print(f"[BACKEND] Audio URL: {audio_url}")
+
+            # 🔽 History 저장 또는 업데이트
+            history_obj.history.extend([
+                {"role": "user", "content": message},
+                {"role": "assistant", "content": answer}
+            ])
+            history_obj.save()
         
         except Exception as e:
             answer = f"API error: {str(e)}"
@@ -67,8 +91,15 @@ def send_message(request, id):
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
-def send_message_to_gpt(message, model_id, system_prompt):
+def send_message_to_gpt(message, model_id, system_prompt, chat_history=None):
     print(f"[BACKEND] Getting answer from GPT using OpenAI")
+    if chat_history:
+        messages = [{"role": "system", "content": system_prompt}] + chat_history + [{"role": "user", "content": message}]
+        response = client.chat.completions.create(
+            model=model_id,
+            messages=messages
+        )
+        return response.choices[0].message.content
     response = client.chat.completions.create(
         model=model_id,
         messages=[
