@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Influencer, InfluencerRating
+from .models import Influencer, InfluencerRating, ConversationStat
 
 @admin.register(Influencer)
 class InfluencerAdmin(admin.ModelAdmin):
@@ -7,4 +7,5 @@ class InfluencerAdmin(admin.ModelAdmin):
     search_fields = ('name', 'description')
 
 admin.site.register(InfluencerRating)
+admin.site.register(ConversationStat)
 

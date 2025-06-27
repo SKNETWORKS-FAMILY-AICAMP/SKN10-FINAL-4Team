@@ -1,0 +1,136 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Stats Dashboard</title>
+    <style>
+        body { background: #19181d; color: #fff; font-family: 'Inter', Arial, sans-serif; margin: 0; padding: 0; }
+        .dashboard { max-width: 1200px; margin: 40px auto; background: #232228; border-radius: 18px; padding: 32px 40px; box-shadow: 0 2px 16px rgba(0,0,0,0.18); }
+        h1 { color: #ff9800; margin-bottom: 32px; }
+        h2 { color: #ff9800; margin-top: 40px; margin-bottom: 20px; }
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 18px; font-size: 1.15rem; }
+        .stat-label { color: #b0b0b0; }
+        .stat-value { font-weight: 700; color: #fff; }
+        .highlight { color: #ff9800; font-weight: 700; }
+        .profit { color: #4caf50; font-weight: 700; }
+        .loss { color: #f44336; font-weight: 700; }
+        .break-even-section { 
+            background: #2a2930; 
+            border-radius: 12px; 
+            padding: 24px; 
+            margin: 24px 0; 
+            border-left: 4px solid #ff9800; 
+        }
+        .break-even-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .break-even-card {
+            background: #1e1d23;
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid #35343a;
+        }
+        .break-even-card h3 {
+            color: #ff9800;
+            margin: 0 0 12px 0;
+            font-size: 1.1rem;
+        }
+        .recent-table { width: 100%; border-collapse: collapse; margin-top: 32px; }
+        .recent-table th, .recent-table td { padding: 8px 10px; border-bottom: 1px solid #35343a; }
+        .recent-table th { color: #ff9800; text-align: left; }
+        .recent-table td { color: #fff; font-size: 0.98rem; }
+        .recent-table tr:last-child td { border-bottom: none; }
+        .section-divider { 
+            border-top: 1px solid #35343a; 
+            margin: 32px 0; 
+            padding-top: 24px; 
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <h1>AI Influencer Admin Stats</h1>
+        
+        <!-- Basic Stats -->
+        <div class="stat-row"><span class="stat-label">총 채팅 수</span><span class="stat-value">{{ total_chats }}</span></div>
+        <div class="stat-row"><span class="stat-label">총 GPT 토큰 사용량</span><span class="stat-value">{{ total_tokens|intcomma }}</span></div>
+        <div class="stat-row"><span class="stat-label">총 ElevenLabs 크레딧 사용량</span><span class="stat-value">{{ total_credits|intcomma }}</span></div>
+        <div class="stat-row"><span class="stat-label">평균 응답 시간</span><span class="stat-value">{{ avg_response_time|floatformat:2 }}초</span></div>
+        <div class="stat-row"><span class="stat-label">평균 답변 단어 수</span><span class="stat-value">{{ avg_words|floatformat:1 }}</span></div>
+        <div class="stat-row"><span class="stat-label">가장 활발한 인플루언서</span><span class="stat-value">{% if most_active_influencer %}{{ most_active_influencer.name }}{% else %}-{% endif %}</span></div>
+        <div class="stat-row"><span class="stat-label">가장 활발한 유저</span><span class="stat-value">{% if most_active_user and most_active_user.user %}{{ most_active_user.user }}{% else %}-{% endif %}</span></div>
+        
+        <!-- Break-Even Analysis Section -->
+        <div class="section-divider"></div>
+        <h2>💰 Break-Even (Even-Out) Analysis</h2>
+        
+        <div class="break-even-section">
+            <h3>📊 Cost Analysis</h3>
+            <div class="stat-row"><span class="stat-label">ChatGPT 4o 예상 비용</span><span class="stat-value">${{ gpt_cost|floatformat:2 }}</span></div>
+            <div class="stat-row"><span class="stat-label">ElevenLabs 예상 비용</span><span class="stat-value">${{ elevenlabs_cost|floatformat:2 }}</span></div>
+            <div class="stat-row"><span class="stat-label">총 비용 (USD)</span><span class="stat-value highlight">${{ total_cost_usd|floatformat:2 }}</span></div>
+            <div class="stat-row"><span class="stat-label">환율 (1 USD = KRW)</span><span class="stat-value">{{ exchange_rate|intcomma }}</span></div>
+            <div class="stat-row"><span class="stat-label">총 비용 (KRW)</span><span class="stat-value highlight">₩{{ total_cost_krw|intcomma }}</span></div>
+            <div class="stat-row"><span class="stat-label">이번 달 활성 유저 수</span><span class="stat-value">{{ unique_users_this_month }}</span></div>
+        </div>
+        
+        <div class="break-even-grid">
+            <div class="break-even-card">
+                <h3>💡 Break-Even Pricing</h3>
+                <div class="stat-row"><span class="stat-label">유저당 최소 요금</span><span class="stat-value">₩{{ break_even_per_user_krw|floatformat:0|intcomma }}</span></div>
+                <div class="stat-row"><span class="stat-label">채팅당 최소 요금</span><span class="stat-value">₩{{ break_even_per_chat_krw|floatformat:0|intcomma }}</span></div>
+            </div>
+            
+            <div class="break-even-card">
+                <h3>📈 Projected Scenarios</h3>
+                <div class="stat-row"><span class="stat-label">가정: 유저당 ₩{{ hypothetical_price_per_user|intcomma }}</span></div>
+                <div class="stat-row"><span class="stat-label">예상 수익/손실</span>
+                    <span class="stat-value {% if projected_profit_per_user >= 0 %}profit{% else %}loss{% endif %}">
+                        ₩{{ projected_profit_per_user|floatformat:0|intcomma }}
+                    </span>
+                </div>
+                <div class="stat-row"><span class="stat-label">가정: 채팅당 ₩{{ hypothetical_price_per_chat|intcomma }}</span></div>
+                <div class="stat-row"><span class="stat-label">예상 수익/손실</span>
+                    <span class="stat-value {% if projected_profit_per_chat >= 0 %}profit{% else %}loss{% endif %}">
+                        ₩{{ projected_profit_per_chat|floatformat:0|intcomma }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Conversations -->
+        <div class="section-divider"></div>
+        <h2>최근 대화 기록</h2>
+        <table class="recent-table">
+            <tr>
+                <th>시간</th>
+                <th>인플루언서</th>
+                <th>유저</th>
+                <th>질문</th>
+                <th>답변(일부)</th>
+                <th>응답시간(s)</th>
+                <th>토큰</th>
+                <th>크레딧</th>
+            </tr>
+            {% for convo in recent_convos %}
+            <tr>
+                <td>{{ convo.created_at|date:"Y-m-d H:i" }}</td>
+                <td>{{ convo.influencer.name }}</td>
+                <td>{% if convo.user %}{{ convo.user }}{% else %}-{% endif %}</td>
+                <td>{{ convo.user_message|truncatechars:20 }}</td>
+                <td>{{ convo.ai_answer|truncatechars:20 }}</td>
+                <td>{{ convo.response_time|floatformat:2 }}</td>
+                <td>{{ convo.tokens_used }}</td>
+                <td>{{ convo.tts_credits_used }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="8" style="text-align:center; color:#b0b0b0;">No data</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html> 

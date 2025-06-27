@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
-from .models import Influencer, InfluencerRating
+from .models import Influencer, InfluencerRating, ConversationStat
 from .forms import InfluencerForm
 import json
 import openai
@@ -18,6 +18,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from history.models import History
 from users.models import User
+import time
+from django.db.models import Sum, Avg, Count
+from datetime import datetime, timedelta
+from django.utils import timezone
 
 load_dotenv()  # take environment variables from .env.
 
@@ -40,14 +44,15 @@ def influencer_chat(request, pk):
 @csrf_exempt
 def send_message(request, id):
     if request.method == 'POST':
+        start_time = time.time()
         message = request.POST.get('message')
         user = request.user
         print(f"[BACKEND] Received message for influencer {id}: {message}")
+        tokens_used = 0
+        tts_credits_used = 0
         try:
-            #인플루언서 모델 가져오기
             influencer = get_object_or_404(Influencer, pk=id)
             print(influencer)
-
             if request.user.is_authenticated and isinstance(request.user, User):
                 history_obj, _ = History.objects.get_or_create(
                     user=user,
@@ -57,37 +62,46 @@ def send_message(request, id):
                 chat_history = history_obj.history
             else:
                 chat_history = []
-
-            #json으로 받은 메시지를 openai에 전달
-            response = send_message_to_gpt(message, influencer.feature_model_id, influencer.feature_system_prompt, chat_history)
+            response, tokens_used = send_message_to_gpt(message, influencer.feature_model_id, influencer.feature_system_prompt, chat_history)
             print(f"Answer: {response}")
-
-            answer = send_message_to_gpt(response, influencer.speech_model_id, influencer.speech_system_prompt)
+            answer, tokens_used2 = send_message_to_gpt(response, influencer.speech_model_id, influencer.speech_system_prompt)
             print(f"Answer: {answer}")
-
+            tokens_used += tokens_used2
             audio_url = generate_tts_audio(influencer, answer)
             print(f"[BACKEND] Audio URL: {audio_url}")
-
-            # 🔽 History 저장 또는 업데이트
+            tts_credits_used = len(answer)
             history_obj.history.extend([
                 {"role": "user", "content": message},
                 {"role": "assistant", "content": answer}
             ])
             history_obj.save()
-        
         except Exception as e:
             answer = f"API error: {str(e)}"
             audio_url = None
-            print(f"Error: {str(e)}")  # Log the error
-
-        #json으로 프론트엔드에 전달
+            print(f"Error: {str(e)}")
+        end_time = time.time()
+        elapsed = end_time - start_time
+        word_count = len(answer.split()) if answer else 0
+        ConversationStat.objects.create(
+            influencer=influencer,
+            user=user if user.is_authenticated else None,
+            user_message=message,
+            ai_answer=answer,
+            word_count=word_count,
+            response_time=elapsed,
+            tokens_used=tokens_used,
+            tts_credits_used=tts_credits_used
+        )
         return JsonResponse({
-            'status': 'success', 
-            'received': message, 
-            'answer': answer, 
-            'audio_url': audio_url
+            'status': 'success',
+            'received': message,
+            'answer': answer,
+            'audio_url': audio_url,
+            'response_time': elapsed,
+            'word_count': word_count,
+            'tokens_used': tokens_used,
+            'tts_credits_used': tts_credits_used
         })
-    
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
@@ -99,7 +113,13 @@ def send_message_to_gpt(message, model_id, system_prompt, chat_history=None):
             model=model_id,
             messages=messages
         )
-        return response.choices[0].message.content
+        answer = response.choices[0].message.content
+        tokens = getattr(response, 'usage', None)
+        if tokens:
+            total_tokens = tokens.total_tokens
+        else:
+            total_tokens = 0
+        return answer, total_tokens
     response = client.chat.completions.create(
         model=model_id,
         messages=[
@@ -107,7 +127,13 @@ def send_message_to_gpt(message, model_id, system_prompt, chat_history=None):
             {"role": "user", "content": message}
         ]
     )
-    return response.choices[0].message.content
+    answer = response.choices[0].message.content
+    tokens = getattr(response, 'usage', None)
+    if tokens:
+        total_tokens = tokens.total_tokens
+    else:
+        total_tokens = 0
+    return answer, total_tokens
 
 
 def generate_tts_audio(influencer, answer):
@@ -175,4 +201,64 @@ def influencer_rating_stats(request, influencer_id):
     return JsonResponse({
         'average_rating': influencer.average_rating or 0,
         'rating_count': influencer.rating_count
+    })
+
+def admin_stats(request):
+    total_chats = ConversationStat.objects.count()
+    total_tokens = ConversationStat.objects.aggregate(total=Sum('tokens_used'))['total'] or 0
+    total_credits = ConversationStat.objects.aggregate(total=Sum('tts_credits_used'))['total'] or 0
+    avg_response_time = ConversationStat.objects.aggregate(avg=Avg('response_time'))['avg'] or 0
+    avg_words = ConversationStat.objects.aggregate(avg=Avg('word_count'))['avg'] or 0
+    most_active_influencer = Influencer.objects.annotate(cnt=Count('conversationstat')).order_by('-cnt').first()
+    most_active_user = ConversationStat.objects.values('user').annotate(cnt=Count('id')).order_by('-cnt').first()
+    recent_convos = ConversationStat.objects.order_by('-created_at')[:10]
+    
+    # Calculate expenses in USD
+    gpt_cost = total_tokens / 1000000 * 5  # $5 per 1M tokens for GPT-4o
+    elevenlabs_cost = total_credits / 1000000 * 11  # $11 per 1M chars for Creator plan
+    total_cost_usd = gpt_cost + elevenlabs_cost
+    
+    # Exchange rate (1 USD = 1,350 KRW)
+    exchange_rate = 1350
+    total_cost_krw = total_cost_usd * exchange_rate
+    
+    # Get unique users this month
+    current_month_start = timezone.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    unique_users_this_month = ConversationStat.objects.filter(
+        created_at__gte=current_month_start,
+        user__isnull=False
+    ).values('user').distinct().count()
+    
+    # Break-even calculations
+    break_even_per_user_krw = total_cost_krw / unique_users_this_month if unique_users_this_month > 0 else 0
+    break_even_per_chat_krw = total_cost_krw / total_chats if total_chats > 0 else 0
+    
+    # Projected profit/loss scenarios
+    hypothetical_price_per_user = 10000  # 5,000 KRW per user
+    hypothetical_price_per_chat = 100   # 100 KRW per chat
+    
+    projected_profit_per_user = (hypothetical_price_per_user * unique_users_this_month) - total_cost_krw
+    projected_profit_per_chat = (hypothetical_price_per_chat * total_chats) - total_cost_krw
+    
+    return render(request, 'influencers/admin_stats.html', {
+        'total_chats': total_chats,
+        'total_tokens': total_tokens,
+        'total_credits': total_credits,
+        'gpt_cost': gpt_cost,
+        'elevenlabs_cost': elevenlabs_cost,
+        'total_cost_usd': total_cost_usd,
+        'total_cost_krw': total_cost_krw,
+        'exchange_rate': exchange_rate,
+        'unique_users_this_month': unique_users_this_month,
+        'break_even_per_user_krw': break_even_per_user_krw,
+        'break_even_per_chat_krw': break_even_per_chat_krw,
+        'hypothetical_price_per_user': hypothetical_price_per_user,
+        'hypothetical_price_per_chat': hypothetical_price_per_chat,
+        'projected_profit_per_user': projected_profit_per_user,
+        'projected_profit_per_chat': projected_profit_per_chat,
+        'avg_response_time': avg_response_time,
+        'avg_words': avg_words,
+        'most_active_influencer': most_active_influencer,
+        'most_active_user': most_active_user,
+        'recent_convos': recent_convos,
     })
