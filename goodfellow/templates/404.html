@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>페이지를 찾을 수 없습니다 - AI Influencer</title>
+    <style>
+        body {
+            background: #19181d;
+            color: #fff;
+            font-family: 'Inter', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .error-container {
+            text-align: center;
+            max-width: 600px;
+            padding: 40px;
+            background: #232228;
+            border-radius: 18px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+        }
+        
+        .error-code {
+            font-size: 8rem;
+            font-weight: 900;
+            color: #ff9800;
+            margin: 0;
+            line-height: 1;
+        }
+        
+        .error-title {
+            font-size: 2rem;
+            color: #fff;
+            margin: 20px 0;
+        }
+        
+        .error-message {
+            color: #b0b0b0;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        
+        .home-button {
+            display: inline-block;
+            background: #ff9800;
+            color: #000;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .home-button:hover {
+            background: #f57c00;
+            transform: translateY(-2px);
+        }
+        
+        .ai-suggestion {
+            margin-top: 30px;
+            padding: 20px;
+            background: #2a2930;
+            border-radius: 12px;
+            border-left: 4px solid #ff9800;
+        }
+        
+        .ai-suggestion h3 {
+            color: #ff9800;
+            margin: 0 0 10px 0;
+        }
+        
+        .ai-suggestion p {
+            color: #b0b0b0;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1 class="error-code">404</h1>
+        <h2 class="error-title">페이지를 찾을 수 없습니다</h2>
+        <p class="error-message">
+            요청하신 페이지가 존재하지 않거나 이동되었을 수 있습니다.<br>
+            URL을 다시 확인하거나 홈페이지로 돌아가서 원하는 인플루언서를 찾아보세요.
+        </p>
+        
+        <a href="{% url 'landingpage' %}" class="home-button">
+            🏠 홈페이지로 돌아가기
+        </a>
+        
+        <div class="ai-suggestion">
+            <h3>🤖 AI 인플루언서 추천</h3>
+            <p>
+                혹시 AI 인플루언서와의 대화를 찾고 계신가요?<br>
+                홈페이지에서 다양한 AI 인플루언서들을 만나보실 수 있습니다!
+            </p>
+        </div>
+    </div>
+</body>
+</html> 
