@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
 from .models import Influencer, InfluencerRating, ConversationStat
 from .forms import InfluencerForm
@@ -36,6 +37,7 @@ elevenlabs = ElevenLabs(api_key=ELEVENLABS_API_KEY)
 User = get_user_model()
 
 #인플루언서 채팅 페이지 렌더링
+@login_required
 def influencer_chat(request, pk):
     influencer = get_object_or_404(Influencer, pk=pk)
     return render(request, 'influencers/chat.html', {'influencer': influencer})
@@ -171,6 +173,7 @@ def generate_tts_audio(influencer, answer):
 
 
 @csrf_exempt
+@login_required
 def create_influencer(request):
     if request.method == 'POST':
         mode = request.POST.get('mode', 'manual')
@@ -203,6 +206,7 @@ def influencer_rating_stats(request, influencer_id):
         'rating_count': influencer.rating_count
     })
 
+@login_required
 def admin_stats(request):
     total_chats = ConversationStat.objects.count()
     total_tokens = ConversationStat.objects.aggregate(total=Sum('tokens_used'))['total'] or 0

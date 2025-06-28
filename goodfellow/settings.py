@@ -60,6 +60,7 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 LOGIN_REDIRECT_URL = '/landingpage'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/homepage'
 ACCOUNT_LOGOUT_ON_GET = True
+LOGIN_URL = '/accounts/login/'
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_LOGIN_METHODS = {'email'}
 MIDDLEWARE = [
