@@ -13,11 +13,11 @@
             <div class="sidebar-logo">LUMINA.</div>
             <!-- <button class="sidebar-btn create">+ Create</button>
             <button class="sidebar-btn discover">Discover</button> -->
-            <input class="sidebar-search" type="text" placeholder="Search">
-            <div class="sidebar-today">Today</div>
+            <!-- <input class="sidebar-search" type="text" placeholder="Search"> -->
+            <!-- <div class="sidebar-today">Today</div>
             <div class="sidebar-user-list">
                 <!-- <div class="sidebar-user"><img src="{% static 'home/gamst.png' %}" alt="Gamst"> 감스트</div> -->
-            </div>
+            <!-- </div>  -->
             <div class="sidebar-bottom">
                 
                 <button class="sidebar-btn upgrade" onclick="location.href='/accounts/logout'">로그아웃</button>
@@ -30,7 +30,7 @@
             <div class="main-header">
                 <span>환영합니다, </span>
                 <span class="main-username">{{ user.name|default:user.username|default:"Guest" }}</span>
-                <input class="main-search" type="text" placeholder="Search">
+                <!-- <input class="main-search" type="text" placeholder="Search"> -->
             </div>
             <section class="section">
                 {% if user.is_staff or user.is_superuser %}
