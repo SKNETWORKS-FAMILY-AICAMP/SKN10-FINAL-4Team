@@ -85,23 +85,23 @@
 
 
 ## 인플루언서 자동 생성 파이프라인 및 검증
-### 인플루언서 생성 과정은 많은 수작업을 요합니다. 관리자들의 권한으로, 인플루언서 생성 과정을 다수의 유튜브 url, 이름 및 이미지로 한번에 생성하는 시스템을 구축하였습니다. 
+#### 인플루언서 생성 과정은 많은 수작업을 요합니다. 관리자들의 권한으로, 인플루언서 생성 과정을 다수의 유튜브 url, 이름 및 이미지로 한번에 생성하는 시스템을 구축하였습니다. 
 <img width="2560" height="991" alt="Screenshot 2025-07-10 at 8 18 07 PM" src="https://github.com/user-attachments/assets/98dc37ab-b869-4afe-928b-1a266aca7172" />
 
-### 정의된 파라미터로 시스템 프롬프팅, 말투 모델 파인튜닝, 음성 모델 파인튜닝을 성공적으로 수행합니다. 
+#### 정의된 파라미터로 시스템 프롬프팅, 말투 모델 파인튜닝, 음성 모델 파인튜닝을 성공적으로 수행합니다. 
 <img width="1373" height="608" alt="Screenshot 2025-07-10 at 8 20 03 PM" src="https://github.com/user-attachments/assets/f157cd20-29fc-453a-a625-2f3eb788da35" />
 
-### 자동 생성 파이프라인은 다중 유튜브 링크를 모두 파인튜닝해 분석하며, 최고의 성능을 기록한 모델을 선정해 인플루언서를 생성하며, 수동 생성 파이프라인 대비 뒤쳐지지 않는 수준을 보입니다.
+#### 자동 생성 파이프라인은 다중 유튜브 링크를 모두 파인튜닝해 분석하며, 최고의 성능을 기록한 모델을 선정해 인플루언서를 생성하며, 수동 생성 파이프라인 대비 뒤쳐지지 않는 수준을 보입니다.
 <img width="455" height="258" alt="Screenshot 2025-06-19 at 8 06 00 PM" src="https://github.com/user-attachments/assets/e31a4532-3336-4b3b-82d6-bbbb5991aee2" />
 <img width="5967" height="2365" alt="audio_similarity_spatial" src="https://github.com/user-attachments/assets/ead8b664-d46d-4499-8167-1e6d3d1512f3" />
 
 ## 관리자 페이지
-### 본 서비스는 SKN 수강생들을 대상으로 배포되었습니다. 효율적인 모니터링과 데이터를 습득하기 위한 관리자 페이지를 지원합니다. 
+#### 본 서비스는 SKN 수강생들을 대상으로 배포되었습니다. 효율적인 모니터링과 데이터를 습득하기 위한 관리자 페이지를 지원합니다. 
 <img width="1237" height="424" alt="Screenshot 2025-07-10 at 8 28 23 PM" src="https://github.com/user-attachments/assets/7c9dc801-b152-4219-aa55-9364c2fccac8" />
 <img width="1244" height="495" alt="Screenshot 2025-07-10 at 8 28 51 PM" src="https://github.com/user-attachments/assets/9ede4905-337b-4a49-9c31-bff57f698650" />
 
 ## 배포
-### AWS Elasticbeanstalk을 활용하여 빠른 배포를 수행했습니다. HTTPS 와 커스텀 도메인을 지원하며, 로드 밸런싱을 통한 트래픽 관리를 수행합니다. 트래픽은 수요에 따라 1-4 인스턴스로 유동적으로 스케일링합니다. 
+#### AWS Elasticbeanstalk을 활용하여 빠른 배포를 수행했습니다. HTTPS 와 커스텀 도메인을 지원하며, 로드 밸런싱을 통한 트래픽 관리를 수행합니다. 트래픽은 수요에 따라 1-4 인스턴스로 유동적으로 스케일링합니다. 
 <img width="1349" height="845" alt="Screenshot 2025-07-10 at 8 24 38 PM" src="https://github.com/user-attachments/assets/44c5e353-3898-4f89-aecd-5dfd0db2b822" />
 
 ## Skills
