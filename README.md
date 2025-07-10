@@ -88,6 +88,9 @@
 #### 인플루언서 생성 과정은 많은 수작업을 요합니다. 관리자들의 권한으로, 인플루언서 생성 과정을 다수의 유튜브 url, 이름 및 이미지로 한번에 생성하는 시스템을 구축하였습니다. 
 <img width="2560" height="991" alt="Screenshot 2025-07-10 at 8 18 07 PM" src="https://github.com/user-attachments/assets/98dc37ab-b869-4afe-928b-1a266aca7172" />
 
+#### 인플루언서 생성은 파인튜닝 과정이 필요하기 때문에 일정 시간 이후 준비가 완료되면 활성화됩니다.
+<img width="441" height="259" alt="Screenshot 2025-07-10 at 8 55 21 PM" src="https://github.com/user-attachments/assets/05c28f71-528e-460f-9b92-a95d82fceff6" />
+
 #### 정의된 파라미터로 시스템 프롬프팅, 말투 모델 파인튜닝, 음성 모델 파인튜닝을 성공적으로 수행합니다. 
 <img width="1373" height="608" alt="Screenshot 2025-07-10 at 8 20 03 PM" src="https://github.com/user-attachments/assets/f157cd20-29fc-453a-a625-2f3eb788da35" />
 
