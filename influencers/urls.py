@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import influencer_chat, send_message, create_influencer
+from .views import influencer_chat, send_message, create_influencer, serve_mp3_file
 from . import views
 
 
@@ -10,6 +10,7 @@ urlpatterns = [
     path('rate/<int:influencer_id>/', views.rate_influencer, name='rate_influencer'),
     path('rate/<int:influencer_id>/stats/', views.influencer_rating_stats, name='influencer_rating_stats'),
     path('admin-stats/', views.admin_stats, name='admin_stats'),
+    path('mp3/<str:filename>/', serve_mp3_file, name='serve_mp3_file'),
 
     # or, if using slug: path('chat/<slug:slug>/', influencer_chat, name='influencer_chat'),
 ]

@@ -21,6 +21,15 @@
         const influencerName = "{{ influencer.name|escapejs }}"; // Get from Django context
         const callBtn = document.getElementById('call-btn');
         
+        // 오디오 재생 함수
+        function playSpecificMP3(audioUrl) {
+            console.log('Attempting to play audio:', audioUrl);
+            const audio = new Audio(audioUrl);
+            audio.play().catch(error => {
+                console.error('Error playing audio:', error);
+            });
+        }
+        
         // Function to scroll to bottom
         function scrollToBottom() {
             chatLog.scrollTop = chatLog.scrollHeight;
@@ -62,6 +71,9 @@
                 const message = chatInput.value;
                 if (!message.trim()) return;
     
+                // Remove keyword detection - use Convai tools instead
+                // const shouldPlayAudio = checkForAudioKeywords(message);
+                
                 // Append user message
                 chatLog.innerHTML += `
                     <div class="bubble-row bubble-row-user">
@@ -107,8 +119,7 @@
                     
                     // Play audio if available
                     if (data.audio_url) {
-                        const audio = new Audio(data.audio_url);
-                        audio.play();
+                        playSpecificMP3(data.audio_url);
                     }
                     
                     // Scroll to bottom after response
@@ -158,10 +169,23 @@
                     container.innerHTML = `
                         <div style="position:relative;">
                             <button id="close-convai-widget" style="position:absolute;top:-18px;right:-18px;background:#232228;color:#fff;border:none;border-radius:50%;width:32px;height:32px;font-size:1.2rem;cursor:pointer;z-index:10;">&times;</button>
-                            <elevenlabs-convai agent-id="agent_01jye3pxkbfqft10w4c8g1yx9v"></elevenlabs-convai>
+                            <elevenlabs-convai 
+                                agent-id="agent_01jye3pxkbfqft10w4c8g1yx9v"
+                                on-tool-call="handleToolCall">
+                            </elevenlabs-convai>
                         </div>
                     `;
                     document.body.appendChild(container);
+                    
+                    // Convai tool call 핸들러 (전역 등록)
+                    window.handleToolCall = function(event) {
+                        const toolCall = event.detail;
+                        console.log('Tool call received:', toolCall);
+                        if (toolCall.name === 'play_audio') {
+                            window.play_audio(toolCall.parameters);
+                        }
+                    };
+                    
                     // Add close functionality
                     document.getElementById('close-convai-widget').onclick = function() {
                         container.remove();
@@ -253,9 +277,23 @@
                 }
             });
         });
+
+        // 전역 play_audio 함수 등록
+        window.play_audio = function(params) {
+            console.log('window.play_audio called with:', params);
+            const audio = new Audio(params.audio_url);
+            audio.play().catch(error => {
+                console.error('Error playing audio:', error);
+            });
+        };
     });
 </script>
 <body>
+    <!-- Test button for debugging -->
+    <button onclick="testAudio()" style="position: fixed; top: 10px; right: 10px; z-index: 9999; background: #ff9800; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">
+        Test Audio
+    </button>
+    
     <a href="#" class="back-btn" id="backBtn">뒤로가기</a>
     <div class="chat-container">
         <div class="chat-wrapper">

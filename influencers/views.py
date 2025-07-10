@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse, Http404
 from .models import Influencer, InfluencerRating, ConversationStat
 from .forms import InfluencerForm
 import json
@@ -41,6 +41,27 @@ User = get_user_model()
 def influencer_chat(request, pk):
     influencer = get_object_or_404(Influencer, pk=pk)
     return render(request, 'influencers/chat.html', {'influencer': influencer})
+
+# Serve MP3 files for Convai tools
+def serve_mp3_file(request, filename):
+    """Serve MP3 files for Convai tools to play"""
+    # Define the directory where MP3 files are stored
+    mp3_dir = os.path.join(settings.MEDIA_ROOT, 'mp3_files')
+    file_path = os.path.join(mp3_dir, filename)
+    
+    # Security check - ensure file exists and is within allowed directory
+    if not os.path.exists(file_path) or not file_path.startswith(mp3_dir):
+        raise Http404("File not found")
+    
+    # Check if it's an MP3 file
+    if not filename.lower().endswith('.mp3'):
+        raise Http404("Invalid file type")
+    
+    # Serve the file
+    response = FileResponse(open(file_path, 'rb'))
+    response['Content-Type'] = 'audio/mpeg'
+    response['Content-Disposition'] = f'inline; filename="{filename}"'
+    return response
 
 #유저 잇풋 openai에 전달
 @csrf_exempt
